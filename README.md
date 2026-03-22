@@ -1,59 +1,58 @@
-# REI - App + Mercado (Node.js)
+# REI - App + Marketplace (Node.js)
 
-Prototipo funcional de REI con dos vistas principales:
+Functional REI prototype with two main views:
 
-- `rei-app.html`: flujo de productor (registro de activos, diagnóstico, finanzas y wallet).
-- `rei-mercado-v2.html`: vista de mercado de contratos.
+- `rei-app.html`: Producer flow (asset registration, diagnostics, finances, and wallet).
 
-El proyecto corre con un servidor Node.js + Express y expone endpoints para conectar frontend y backend.
+- `rei-mercado-v2.html`: Contract marketplace view.
+
+The project runs on a Node.js + Express server and exposes endpoints to connect the frontend and backend.
 
 ## Stack
 
 - Node.js
 - Express
 - HTML/CSS/JS (vanilla)
-- Integración de wallet Stellar (kit instalado en frontend)
+- Stellar wallet integration (kit installed on the frontend)
 
-## Estructura principal
+## Main Structure
 
-- `server.js` - servidor Express y rutas web
-- `app-api.js` - API del flujo APP
-- `rei-app.html` - interfaz principal del productor
-- `rei-mercado-v2.html` - interfaz de mercado
-- `app-store.json` - persistencia local simple (se genera/actualiza en runtime)
-- `stellar_bridge.rs` y `mxne_wallet_adapter.rs` - base Rust para puente blockchain
+- `server.js` - Express server and web routes
+- `app-api.js` - APP flow API
+- `rei-app.html` - main producer interface
+- `rei-mercado-v2.html` - marketplace interface
+- `app-store.json` - simple local persistence (generated/updated at runtime)
+- `stellar_bridge.rs` and `mxne_wallet_adapter.rs` - Rust foundation for the blockchain bridge
 
-## Requisitos
+## Requirements
 
-- Node.js 18+ (recomendado Node.js 20+ para ecosistema wallet más reciente)
+- Node.js 18+ (Node.js 20+ recommended for the latest wallet ecosystem)
 
-## Instalación
+## Installation
 
-```bash
-npm install
+```npm install
 ```
 
-## Ejecución
+## Execution
 
-```bash
-npm start
+```npm Start
 ```
 
-El servidor intenta iniciar en `3000`; si está ocupado, sube automáticamente al siguiente puerto disponible.
+The server attempts to start on port 3000; if it's busy, it automatically switches to the next available port.
 
-Rutas:
+Paths:
 
 - `http://localhost:3000/app`
 - `http://localhost:3000/mercado`
 
-## Acceso (login fijo)
+## Access (fixed login)
 
-Credenciales habilitadas:
+Enabled credentials:
 
-- Correo: `productor@gmail.com`
-- Contraseña: `ILOVEBAF`
+- Email: `productor@gmail.com`
+- Password: `ILOVEBAF`
 
-También está disponible el inicio de sesión por wallet Stellar desde el login del APP.
+Login via Stellar wallet is also available from the app login.
 
 ## API (base)
 
@@ -63,7 +62,7 @@ Base URL:
 /api/app
 ```
 
-Endpoints relevantes:
+Relevant Endpoints:
 
 - `POST /auth/login`
 - `POST /auth/wallet`
@@ -73,7 +72,8 @@ Endpoints relevantes:
 - `POST /wallet/deposit-mxne`
 - `POST /wallet/withdraw-mxne`
 
-## Notas
+## Notes
 
-- `app-store.json` funciona como almacenamiento local para pruebas.
-- Este repositorio está orientado a demo/prototipo; para producción conviene migrar a DB real, auth robusta y manejo seguro de secretos.
+- `app-store.json` serves as local storage for testing.
+
+- This repository is intended for demo/prototype use; for production, it is recommended to migrate to a real database with robust authentication and secure secret management.
