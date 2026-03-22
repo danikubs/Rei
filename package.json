@@ -1,0 +1,16 @@
+{
+  "name": "rei-node-app",
+  "version": "1.0.0",
+  "description": "Version Node.js para los HTML de REI",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@creit.tech/stellar-wallets-kit": "^1.9.5",
+    "express": "^4.21.2"
+  }
+}

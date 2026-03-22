@@ -1,0 +1,261 @@
+{
+  "users": [
+    {
+      "id": "usr_1774128381323",
+      "name": "Tester",
+      "email": "tester@example.com",
+      "password": "12345678",
+      "phone": "7770000000",
+      "category": null,
+      "subcategory": null,
+      "createdAt": "2026-03-21T21:26:21.323Z"
+    },
+    {
+      "id": "usr_1774128877631_107",
+      "name": "Google User",
+      "email": "google.user@example.com",
+      "password": "",
+      "phone": "",
+      "category": null,
+      "subcategory": null,
+      "loginProvider": "google",
+      "walletAddress": "",
+      "createdAt": "2026-03-21T21:34:37.631Z"
+    },
+    {
+      "id": "usr_1774128877751_954",
+      "name": "Productor GLOBST",
+      "email": "globstrt@lobstr.wallet",
+      "password": "",
+      "phone": "",
+      "category": null,
+      "subcategory": null,
+      "loginProvider": "lobstr",
+      "walletAddress": "GLOBSTRTEST001122334455",
+      "createdAt": "2026-03-21T21:34:37.751Z"
+    },
+    {
+      "id": "usr_1774129268052_466",
+      "name": "Productor GAAAAA",
+      "email": "gaaaaaaa@lobstr.wallet",
+      "password": "",
+      "phone": "",
+      "category": null,
+      "subcategory": null,
+      "loginProvider": "stellar-wallets-kit",
+      "walletAddress": "GAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+      "createdAt": "2026-03-21T21:41:08.052Z"
+    },
+    {
+      "id": "usr_1774129268056_756",
+      "name": "OAuth User",
+      "email": "oauth.user@example.com",
+      "password": "",
+      "phone": "",
+      "category": null,
+      "subcategory": null,
+      "loginProvider": "google",
+      "walletAddress": "",
+      "createdAt": "2026-03-21T21:41:08.056Z"
+    },
+    {
+      "id": "usr_productor_fixed",
+      "name": "Productor REI",
+      "email": "productor@gmail.com",
+      "password": "ILOVEBAF",
+      "phone": "",
+      "category": "Produccion",
+      "subcategory": "Avicultura",
+      "loginProvider": "password",
+      "walletAddress": "",
+      "createdAt": "2026-03-21T21:47:21.388Z"
+    }
+  ],
+  "animals": [
+    {
+      "id": "ani_1774128381447",
+      "ownerId": "usr_1774128381323",
+      "type": "Pollo",
+      "quantity": 1,
+      "purpose": "Carne",
+      "breed": "Ross 308",
+      "identifier": "POL-001",
+      "ageWeeks": 6,
+      "weightKg": 2.5,
+      "condition": "Excelente",
+      "origin": "Cuautla",
+      "responsiblePhone": "777",
+      "diagnosticsCompleted": [
+        1
+      ],
+      "score": 15,
+      "createdAt": "2026-03-21T21:26:21.447Z"
+    },
+    {
+      "id": "ani_1774129813304",
+      "ownerId": "usr_productor_fixed",
+      "type": "Pollo",
+      "quantity": 1000,
+      "purpose": "Carne",
+      "breed": "",
+      "identifier": "023",
+      "ageWeeks": 0,
+      "weightKg": 0,
+      "condition": "Regular",
+      "origin": "",
+      "responsiblePhone": "",
+      "diagnosticsCompleted": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "score": 100,
+      "createdAt": "2026-03-21T21:50:13.304Z"
+    },
+    {
+      "id": "ani_1774130567255",
+      "ownerId": "usr_productor_fixed",
+      "type": "Pollo",
+      "quantity": 1000,
+      "purpose": "Carne",
+      "breed": "",
+      "identifier": "o23",
+      "ageWeeks": 0,
+      "weightKg": 0,
+      "condition": "Regular",
+      "origin": "",
+      "responsiblePhone": "",
+      "diagnosticsCompleted": [],
+      "score": 0,
+      "createdAt": "2026-03-21T22:02:47.257Z"
+    },
+    {
+      "id": "ani_1774192826994",
+      "ownerId": "usr_productor_fixed",
+      "type": "Pollo",
+      "quantity": 1,
+      "purpose": "Carne",
+      "breed": "",
+      "identifier": "023",
+      "ageWeeks": 0,
+      "weightKg": 0,
+      "condition": "Regular",
+      "origin": "",
+      "responsiblePhone": "",
+      "diagnosticsCompleted": [],
+      "score": 0,
+      "createdAt": "2026-03-22T15:20:26.995Z"
+    }
+  ],
+  "sessions": {},
+  "wallets": {
+    "usr_1774128381323": {
+      "mxnBalance": 500,
+      "mxneBalance": 500,
+      "movements": [
+        {
+          "id": "mov_1774128381464",
+          "type": "deposit",
+          "amount": 500,
+          "currency": "MXNe",
+          "provider": "Etherfuse",
+          "network": "Stellar",
+          "txHash": "8a32da878c05f4867ef3a6862dbb51c2",
+          "createdAt": "2026-03-21T21:26:21.464Z",
+          "note": "Depósito MXN tokenizado (MXNe) acreditado"
+        }
+      ],
+      "poolContracts": []
+    },
+    "usr_1774128877631_107": {
+      "mxnBalance": 0,
+      "mxneBalance": 0,
+      "movements": [],
+      "poolContracts": []
+    },
+    "usr_1774128877751_954": {
+      "mxnBalance": 0,
+      "mxneBalance": 0,
+      "movements": [],
+      "poolContracts": []
+    },
+    "usr_1774129268052_466": {
+      "mxnBalance": 0,
+      "mxneBalance": 0,
+      "movements": [],
+      "poolContracts": []
+    },
+    "usr_1774129268056_756": {
+      "mxnBalance": 0,
+      "mxneBalance": 0,
+      "movements": [],
+      "poolContracts": []
+    },
+    "usr_productor_fixed": {
+      "mxnBalance": 0,
+      "mxneBalance": 0,
+      "movements": [
+        {
+          "id": "mov_1774129854972",
+          "type": "pool_deposit",
+          "amount": 0,
+          "currency": "MXNe",
+          "provider": "REI Pool",
+          "network": "Stellar",
+          "txHash": "84b48719a215a96999bbef0d58d281fe",
+          "createdAt": "2026-03-21T21:50:54.972Z",
+          "note": "Contrato 023 depositado en pool"
+        },
+        {
+          "id": "mov_1774129854134",
+          "type": "pool_withdraw",
+          "amount": 0,
+          "currency": "MXNe",
+          "provider": "REI Pool",
+          "network": "Stellar",
+          "txHash": "82c44c4e133ae93e38d4711922dbf046",
+          "createdAt": "2026-03-21T21:50:54.134Z",
+          "note": "Retiro de contrato ani_1774129813304 del pool (requiere liquidación de obligaciones)"
+        },
+        {
+          "id": "mov_1774129849180",
+          "type": "pool_deposit",
+          "amount": 0,
+          "currency": "MXNe",
+          "provider": "REI Pool",
+          "network": "Stellar",
+          "txHash": "b37fcc8f551ea1309b40ad2b04a09bae",
+          "createdAt": "2026-03-21T21:50:49.180Z",
+          "note": "Contrato 023 depositado en pool"
+        },
+        {
+          "id": "mov_1774129847588",
+          "type": "pool_withdraw",
+          "amount": 0,
+          "currency": "MXNe",
+          "provider": "REI Pool",
+          "network": "Stellar",
+          "txHash": "1d01d52901c48ba7c17220f83908a0c7",
+          "createdAt": "2026-03-21T21:50:47.588Z",
+          "note": "Retiro de contrato ani_1774129813304 del pool (requiere liquidación de obligaciones)"
+        },
+        {
+          "id": "mov_1774129843159",
+          "type": "pool_deposit",
+          "amount": 0,
+          "currency": "MXNe",
+          "provider": "REI Pool",
+          "network": "Stellar",
+          "txHash": "557af5312e18ce82f49a6d9a80814075",
+          "createdAt": "2026-03-21T21:50:43.161Z",
+          "note": "Contrato 023 depositado en pool"
+        }
+      ],
+      "poolContracts": [
+        "ani_1774129813304"
+      ]
+    }
+  }
+}

@@ -1,0 +1,1076 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>REI — Mercado de Contratos</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700;800&family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#090D14;
+  --bg2:#0F1520;
+  --bg3:#151C2C;
+  --bg4:#1A2236;
+  --surface:#111827;
+  --border:#1C2640;
+  --border2:#253354;
+  --green:#00E676;
+  --green2:#00C853;
+  --green-bg:rgba(0,230,118,0.08);
+  --green-bg2:rgba(0,230,118,0.15);
+  --red:#FF5252;
+  --red-bg:rgba(255,82,82,0.08);
+  --amber:#FFB300;
+  --amber-bg:rgba(255,179,0,0.08);
+  --cyan:#00BCD4;
+  --purple:#B388FF;
+  --pink:#FF80AB;
+  --orange:#FFAB40;
+  --teal:#64FFDA;
+  --blue:#448AFF;
+  --text:#E8ECF4;
+  --text2:#94A3B8;
+  --text3:#5A6B87;
+  --mono:'JetBrains Mono',monospace;
+  --sans:'Manrope',sans-serif;
+  --r:10px;
+  --r2:14px;
+}
+html,body{
+  font-family:var(--sans);
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+/* ═══ SCROLLBAR ═══ */
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:4px}
+
+/* ═══ PHONE CONTAINER ═══ */
+.app{max-width:480px;margin:0 auto;position:relative;min-height:100vh}
+
+/* ═══ HEADER ═══ */
+.header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 16px;
+  border-bottom:1px solid var(--border);
+  position:sticky;top:0;z-index:100;
+  background:rgba(9,13,20,0.94);
+  backdrop-filter:blur(20px);
+}
+.h-left{display:flex;align-items:center;gap:12px}
+.logo{
+  width:34px;height:34px;border-radius:9px;
+  background:linear-gradient(135deg,var(--green) 0%,var(--cyan) 100%);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--sans);font-weight:800;font-size:13px;color:#090D14;
+}
+.pnl{font-family:var(--mono);font-size:16px;font-weight:700;color:var(--green)}
+.pnl small{display:block;font-size:10px;color:var(--text3);font-weight:500;font-family:var(--sans)}
+.h-right{display:flex;align-items:center;gap:8px}
+.icon-btn{
+  width:34px;height:34px;border-radius:8px;
+  border:1px solid var(--border);background:transparent;
+  color:var(--text2);display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:all .2s;
+}
+.icon-btn:hover{border-color:var(--text3);color:var(--text)}
+.icon-btn svg{width:15px;height:15px}
+.wallet-btn{
+  padding:7px 14px;border-radius:8px;border:none;
+  background:var(--green);color:#090D14;
+  font-family:var(--sans);font-size:11px;font-weight:700;
+  cursor:pointer;display:flex;align-items:center;gap:6px;
+  transition:all .2s;letter-spacing:0.3px;
+}
+.wallet-btn:hover{background:var(--green2);transform:translateY(-1px)}
+.wallet-btn.connected{
+  background:var(--green-bg2);color:var(--green);border:1px solid rgba(0,230,118,0.2);
+}
+.wallet-btn .w-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:wPulse 2s infinite}
+@keyframes wPulse{0%,100%{opacity:1}50%{opacity:.4}}
+
+/* ═══ TICKER ═══ */
+.ticker{
+  display:flex;gap:0;border-bottom:1px solid var(--border);
+  overflow-x:auto;scrollbar-width:none;
+}
+.ticker::-webkit-scrollbar{display:none}
+.tk{
+  flex-shrink:0;padding:8px 16px;border-right:1px solid var(--border);
+  min-width:110px;
+}
+.tk:last-child{border-right:none}
+.tk-sym{font-family:var(--mono);font-size:10px;color:var(--text3);letter-spacing:.5px}
+.tk-price{font-family:var(--mono);font-size:12px;font-weight:700;margin-top:1px}
+.tk-price.up{color:var(--green)}.tk-price.down{color:var(--red)}
+
+/* ═══ FILTER TABS ═══ */
+.tabs{
+  display:flex;padding:10px 16px 0;gap:2px;
+  border-bottom:1px solid var(--border);overflow-x:auto;scrollbar-width:none;
+}
+.tabs::-webkit-scrollbar{display:none}
+.tab{
+  padding:9px 14px;font-size:12px;font-weight:600;
+  color:var(--text3);border:none;background:transparent;
+  cursor:pointer;border-bottom:2px solid transparent;
+  transition:all .15s;white-space:nowrap;font-family:var(--sans);
+}
+.tab.on{color:var(--green);border-bottom-color:var(--green)}
+.tab:hover{color:var(--text2)}
+
+/* ═══ COLUMN HEADER ═══ */
+.cols{
+  display:grid;grid-template-columns:2fr 1.1fr 0.7fr 1fr;
+  padding:8px 16px;border-bottom:1px solid var(--border);
+  font-size:9px;font-weight:700;color:var(--text3);
+  letter-spacing:.8px;text-transform:uppercase;
+}
+.cols span:nth-child(n+2){text-align:right}
+
+/* ═══ CONTRACT ROW ═══ */
+.row{
+  display:grid;grid-template-columns:2fr 1.1fr 0.7fr 1fr;
+  padding:14px 16px;border-bottom:1px solid var(--border);
+  align-items:center;cursor:pointer;
+  transition:background .12s;position:relative;
+  animation:rowIn .35s ease backwards;
+}
+@keyframes rowIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.row:hover{background:var(--bg3)}
+.row:active{background:var(--bg4)}
+/* Left accent */
+.row::before{
+  content:'';position:absolute;left:0;top:6px;bottom:6px;
+  width:2.5px;border-radius:0 2px 2px 0;opacity:0;transition:opacity .15s;
+}
+.row:hover::before{opacity:1}
+.row[data-t="pollo"]::before{background:var(--green)}
+.row[data-t="bovino"]::before{background:var(--cyan)}
+.row[data-t="ovino"]::before{background:var(--amber)}
+.row[data-t="conejo"]::before{background:var(--purple)}
+.row[data-t="cerdo"]::before{background:var(--pink)}
+.row[data-t="pavo"]::before{background:var(--orange)}
+.row[data-t="cabra"]::before{background:var(--teal)}
+.row[data-t="pato"]::before{background:var(--blue)}
+.row[data-t="codorniz"]::before{background:#CE93D8}
+.row.closed{opacity:.45}
+
+/* Asset cell */
+.a-cell{display:flex;align-items:center;gap:10px}
+.a-ico{
+  width:34px;height:34px;border-radius:8px;
+  display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;
+}
+.a-ico.pollo{background:var(--green-bg)}.a-ico.bovino{background:rgba(0,188,212,.1)}
+.a-ico.ovino{background:var(--amber-bg)}.a-ico.conejo{background:rgba(179,136,255,.1)}
+.a-ico.cerdo{background:rgba(255,128,171,.1)}.a-ico.pavo{background:rgba(255,171,64,.1)}
+.a-ico.cabra{background:rgba(100,255,218,.08)}.a-ico.pato{background:rgba(68,138,255,.1)}
+.a-ico.codorniz{background:rgba(206,147,216,.1)}
+.a-name{font-family:var(--mono);font-size:13px;font-weight:700;letter-spacing:.2px}
+.a-sub{font-size:10px;color:var(--text3);margin-top:1px;display:flex;align-items:center;gap:4px}
+.a-sub .dot{width:4px;height:4px;border-radius:50%;display:inline-block}
+
+/* Price cell */
+.p-cell{text-align:right}
+.p-val{font-family:var(--mono);font-size:13px;font-weight:700;transition:color .25s}
+.p-chg{font-family:var(--mono);font-size:10px;font-weight:600;margin-top:1px}
+.p-chg.up{color:var(--green)}.p-chg.down{color:var(--red)}
+
+/* Sparkline */
+.sp-cell{display:flex;justify-content:flex-end}
+.sp-cell canvas{width:64px;height:26px}
+
+/* Countdown */
+.cd-cell{text-align:right}
+.cd-val{
+  font-family:var(--mono);font-size:11px;font-weight:600;
+  padding:3px 7px;border-radius:4px;display:inline-block;
+}
+.cd-val.live{background:var(--green-bg);color:var(--green);animation:cdP 2s infinite}
+.cd-val.closing{background:var(--amber-bg);color:var(--amber);animation:cdP 1s infinite}
+.cd-val.closed{background:rgba(90,107,135,.12);color:var(--text3)}
+@keyframes cdP{0%,100%{opacity:1}50%{opacity:.6}}
+.cd-lbl{font-size:8px;color:var(--text3);margin-top:2px;letter-spacing:.4px;text-transform:uppercase}
+
+/* ═══ FLASH ═══ */
+.fl-g{animation:flG .35s}.fl-r{animation:flR .35s}
+@keyframes flG{0%{color:var(--text)}25%{color:var(--green);text-shadow:0 0 6px rgba(0,230,118,.3)}100%{color:var(--text)}}
+@keyframes flR{0%{color:var(--text)}25%{color:var(--red);text-shadow:0 0 6px rgba(255,82,82,.3)}100%{color:var(--text)}}
+
+/* ═══ OVERLAY / MODAL SYSTEM ═══ */
+.overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,.65);
+  z-index:500;display:none;align-items:flex-end;justify-content:center;
+  backdrop-filter:blur(4px);
+}
+.overlay.show{display:flex}
+.modal{
+  width:100%;max-width:480px;max-height:92vh;
+  background:var(--bg2);border-radius:20px 20px 0 0;
+  overflow-y:auto;
+  animation:slideUp .35s cubic-bezier(.22,1,.36,1);
+  scrollbar-width:none;
+}
+.modal::-webkit-scrollbar{display:none}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.m-handle{width:36px;height:4px;background:var(--border2);border-radius:4px;margin:10px auto 0}
+.m-head{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:16px 20px 12px;position:sticky;top:0;
+  background:var(--bg2);z-index:10;
+}
+.m-head h3{font-family:var(--sans);font-size:16px;font-weight:700}
+.m-close{
+  width:30px;height:30px;border-radius:8px;
+  border:1px solid var(--border);background:transparent;
+  color:var(--text2);font-size:16px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+}
+.m-close:hover{background:var(--bg4)}
+.m-body{padding:0 20px 28px}
+
+/* ═══ DETAIL SCREEN ═══ */
+.det-hero{
+  text-align:center;padding:20px;
+  background:linear-gradient(180deg,var(--bg3) 0%,var(--bg2) 100%);
+  border-radius:0 0 16px 16px;margin-bottom:16px;
+}
+.det-hero .dh-icon{font-size:46px;margin-bottom:8px}
+.det-hero .dh-id{font-family:var(--mono);font-size:18px;font-weight:800}
+.det-hero .dh-sub{font-size:12px;color:var(--text2);margin-top:4px}
+.det-hero .dh-tags{display:flex;justify-content:center;gap:6px;margin-top:10px}
+.tag{
+  padding:3px 10px;border-radius:50px;font-size:10px;font-weight:700;
+  letter-spacing:.3px;
+}
+.tag.g{background:var(--green-bg);color:var(--green)}
+.tag.a{background:var(--amber-bg);color:var(--amber)}
+.tag.r{background:var(--red-bg);color:var(--red)}
+.tag.c{background:rgba(0,188,212,.1);color:var(--cyan)}
+
+/* Price Hero */
+.price-hero{
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  padding:16px;margin-bottom:12px;
+}
+.price-hero .ph-val{font-family:var(--mono);font-size:32px;font-weight:800}
+.price-hero .ph-chg{
+  font-family:var(--mono);font-size:13px;font-weight:700;
+  padding:4px 10px;border-radius:6px;
+}
+.price-hero .ph-chg.up{background:var(--green-bg);color:var(--green)}
+.price-hero .ph-chg.down{background:var(--red-bg);color:var(--red)}
+
+/* Chart Area */
+.chart-area{
+  background:var(--bg3);border-radius:var(--r2);
+  padding:14px;margin-bottom:16px;position:relative;
+  border:1px solid var(--border);
+}
+.chart-area canvas{width:100%;height:120px;display:block}
+.chart-tabs{display:flex;gap:4px;margin-bottom:10px}
+.chart-tab{
+  padding:5px 10px;border-radius:6px;font-size:10px;
+  font-weight:700;border:none;background:var(--bg4);
+  color:var(--text3);cursor:pointer;font-family:var(--mono);
+}
+.chart-tab.on{background:var(--green-bg);color:var(--green)}
+
+/* Info Grid */
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px}
+.info-card{
+  background:var(--bg3);border:1px solid var(--border);
+  border-radius:var(--r);padding:12px;
+}
+.info-card .ic-label{font-size:10px;color:var(--text3);margin-bottom:4px;letter-spacing:.3px}
+.info-card .ic-val{font-family:var(--mono);font-size:15px;font-weight:700}
+.info-card .ic-val.g{color:var(--green)}.info-card .ic-val.a{color:var(--amber)}.info-card .ic-val.r{color:var(--red)}
+
+/* Timer bar */
+.timer-bar{
+  background:var(--bg3);border:1px solid var(--border);
+  border-radius:var(--r2);padding:16px;margin-bottom:16px;text-align:center;
+}
+.timer-bar .tb-label{font-size:11px;color:var(--text3);margin-bottom:6px}
+.timer-bar .tb-val{
+  font-family:var(--mono);font-size:26px;font-weight:800;
+  letter-spacing:2px;
+}
+.timer-bar .tb-val.live{color:var(--green)}
+.timer-bar .tb-val.closing{color:var(--amber)}
+.timer-bar .tb-val.closed{color:var(--text3)}
+.timer-bar .tb-progress{
+  height:4px;background:var(--border);border-radius:4px;
+  margin-top:10px;overflow:hidden;
+}
+.timer-bar .tb-fill{height:100%;border-radius:4px;transition:width .5s;background:var(--green)}
+.timer-bar .tb-fill.closing{background:var(--amber)}
+
+/* Order Book */
+.ob-section{margin-bottom:16px}
+.ob-title{font-size:12px;font-weight:700;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.ob-title .dot-live{width:6px;height:6px;border-radius:50%;background:var(--green);animation:wPulse 1.5s infinite}
+.ob-row{
+  display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;
+  margin-bottom:3px;padding:4px 8px;border-radius:4px;
+  font-family:var(--mono);font-size:11px;font-weight:500;
+}
+.ob-row.buy{background:var(--green-bg)}
+.ob-row.sell{background:var(--red-bg)}
+.ob-row span:nth-child(2){text-align:center}
+.ob-row span:nth-child(3){text-align:right}
+.ob-head{
+  display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;
+  padding:4px 8px;font-size:9px;font-weight:700;
+  color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px;
+}
+.ob-head span:nth-child(2){text-align:center}
+.ob-head span:nth-child(3){text-align:right}
+
+/* Action Buttons */
+.act-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+.act-btn{
+  padding:14px;border:none;border-radius:var(--r);
+  font-family:var(--sans);font-size:14px;font-weight:700;
+  cursor:pointer;transition:all .2s;
+}
+.act-btn.invest{background:var(--green);color:#090D14}
+.act-btn.invest:hover{background:var(--green2);transform:translateY(-1px)}
+.act-btn.bid{background:var(--bg4);color:var(--text);border:1px solid var(--border2)}
+.act-btn.bid:hover{border-color:var(--text3)}
+.act-btn:disabled{opacity:.35;cursor:not-allowed;transform:none!important}
+.act-full{
+  width:100%;padding:14px;border:none;border-radius:var(--r);
+  font-family:var(--sans);font-size:14px;font-weight:700;
+  cursor:pointer;transition:all .2s;margin-bottom:10px;
+}
+.act-full.green{background:var(--green);color:#090D14}
+.act-full.green:hover{background:var(--green2)}
+.act-full.outline{background:transparent;color:var(--text);border:1px solid var(--border2)}
+.act-full.outline:hover{border-color:var(--text3)}
+
+/* ═══ WALLET MODAL ═══ */
+.wallet-opt{
+  display:flex;align-items:center;gap:14px;
+  padding:16px;background:var(--bg3);border:1px solid var(--border);
+  border-radius:var(--r2);cursor:pointer;margin-bottom:10px;
+  transition:all .2s;
+}
+.wallet-opt:hover{border-color:var(--green);background:var(--bg4)}
+.wallet-opt .wo-icon{
+  width:42px;height:42px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;font-size:20px;
+  background:var(--bg4);
+}
+.wallet-opt .wo-name{font-size:14px;font-weight:700}
+.wallet-opt .wo-desc{font-size:11px;color:var(--text3);margin-top:2px}
+.wallet-opt .wo-arrow{margin-left:auto;color:var(--text3);font-size:14px}
+.wallet-opt .wo-pop{
+  font-size:9px;font-weight:700;padding:2px 8px;border-radius:50px;
+  background:var(--green-bg);color:var(--green);margin-left:auto;
+}
+
+/* ═══ INVEST MODAL ═══ */
+.inv-input-wrap{
+  background:var(--bg3);border:1.5px solid var(--border);
+  border-radius:var(--r2);padding:14px;margin-bottom:14px;
+  transition:border-color .2s;
+}
+.inv-input-wrap:focus-within{border-color:var(--green)}
+.inv-input-wrap label{font-size:10px;color:var(--text3);display:block;margin-bottom:6px}
+.inv-input-wrap .inv-row{display:flex;align-items:center;gap:8px}
+.inv-input-wrap input{
+  flex:1;background:transparent;border:none;outline:none;
+  font-family:var(--mono);font-size:22px;font-weight:700;color:var(--text);
+}
+.inv-input-wrap .inv-curr{
+  font-family:var(--mono);font-size:12px;font-weight:700;color:var(--text3);
+  padding:4px 10px;background:var(--bg4);border-radius:6px;
+}
+.inv-preset{display:flex;gap:6px;margin-bottom:16px}
+.inv-preset button{
+  flex:1;padding:8px;border:1px solid var(--border);background:var(--bg3);
+  border-radius:6px;font-family:var(--mono);font-size:11px;font-weight:600;
+  color:var(--text2);cursor:pointer;transition:all .15s;
+}
+.inv-preset button:hover{border-color:var(--green);color:var(--green)}
+.inv-summary{
+  background:var(--bg3);border:1px solid var(--border);
+  border-radius:var(--r);padding:14px;margin-bottom:16px;
+}
+.inv-summary .is-row{
+  display:flex;justify-content:space-between;padding:6px 0;
+  font-size:12px;
+}
+.inv-summary .is-row .is-l{color:var(--text3)}
+.inv-summary .is-row .is-v{font-family:var(--mono);font-weight:600}
+.inv-summary .is-row .is-v.g{color:var(--green)}
+
+/* ═══ TOAST ═══ */
+.toast{
+  position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);
+  background:var(--bg4);border:1px solid var(--border2);color:var(--text);
+  padding:12px 22px;border-radius:12px;font-size:13px;font-weight:600;
+  z-index:9999;transition:transform .35s cubic-bezier(.22,1,.36,1);
+  white-space:nowrap;backdrop-filter:blur(10px);
+}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.toast .t-icon{margin-right:6px}
+
+/* ═══ CONNECTED BADGE ═══ */
+.conn-bar{
+  display:none;align-items:center;justify-content:center;gap:8px;
+  padding:8px 16px;background:var(--green-bg);border-bottom:1px solid rgba(0,230,118,.1);
+  font-size:11px;font-weight:600;color:var(--green);
+}
+.conn-bar.show{display:flex}
+.conn-bar .cb-addr{font-family:var(--mono);font-size:10px;opacity:.7}
+</style>
+</head>
+<body>
+
+<div class="app" id="app">
+
+  <!-- ═══ CONNECTED BAR ═══ -->
+  <div class="conn-bar" id="connBar">
+    <span class="w-dot" style="width:5px;height:5px;border-radius:50%;background:var(--green);animation:wPulse 2s infinite;display:inline-block"></span>
+    Stellar conectado
+    <span class="cb-addr" id="connAddr">GBRX…4K7F</span>
+  </div>
+
+  <!-- ═══ HEADER ═══ -->
+  <div class="header">
+    <div class="h-left">
+      <div class="logo">Rei</div>
+      <div class="pnl">+$<span id="pnlVal">2,847</span><small>PnL 24h</small></div>
+    </div>
+    <div class="h-right">
+      <button class="icon-btn" onclick="openModal('searchModal')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+      </button>
+      <button class="wallet-btn" id="walletBtn" onclick="openModal('walletModal')">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 12V7H5a2 2 0 010-4h14v4"/><path d="M3 5v14a2 2 0 002 2h16v-5"/><circle cx="18" cy="16" r="1"/></svg>
+        <span id="walletBtnText">Connect</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ═══ TICKER ═══ -->
+  <div class="ticker" id="tickerStrip"></div>
+
+  <!-- ═══ TABS ═══ -->
+  <div class="tabs">
+    <button class="tab on" onclick="setFilter(this,'all')">Todos</button>
+    <button class="tab" onclick="setFilter(this,'pollo')">Pollo</button>
+    <button class="tab" onclick="setFilter(this,'bovino')">Bovino</button>
+    <button class="tab" onclick="setFilter(this,'ovino')">Ovino</button>
+    <button class="tab" onclick="setFilter(this,'conejo')">Conejo</button>
+    <button class="tab" onclick="setFilter(this,'cerdo')">Cerdo</button>
+    <button class="tab" onclick="setFilter(this,'pavo')">Pavo</button>
+    <button class="tab" onclick="setFilter(this,'cabra')">Cabra</button>
+    <button class="tab" onclick="setFilter(this,'pato')">Pato</button>
+  </div>
+
+  <!-- ═══ COL HEADERS ═══ -->
+  <div class="cols">
+    <span>Contrato</span>
+    <span>Precio</span>
+    <span>Gráfica</span>
+    <span>Subasta</span>
+  </div>
+
+  <!-- ═══ ROWS ═══ -->
+  <div id="rowsContainer"></div>
+</div>
+
+<!-- ═══════════════════════════════ -->
+<!--  MODALS                        -->
+<!-- ═══════════════════════════════ -->
+
+<!-- WALLET MODAL -->
+<div class="overlay" id="walletModal" onclick="closeIfBg(event,'walletModal')">
+  <div class="modal">
+    <div class="m-handle"></div>
+    <div class="m-head"><h3>Conectar Wallet</h3><button class="m-close" onclick="closeModal('walletModal')">✕</button></div>
+    <div class="m-body">
+      <p style="font-size:12px;color:var(--text2);margin-bottom:16px;line-height:1.6;">
+        Conecta tu wallet de Stellar para participar en subastas, invertir en contratos y gestionar tus activos on-chain.
+      </p>
+      <div class="wallet-opt" onclick="connectWallet('freighter')">
+        <div class="wo-icon">🚀</div>
+        <div>
+          <div class="wo-name">Freighter</div>
+          <div class="wo-desc">Extension oficial de Stellar (SDF)</div>
+        </div>
+        <span class="wo-pop">Popular</span>
+      </div>
+      <div class="wallet-opt" onclick="connectWallet('lobstr')">
+        <div class="wo-icon">⭐</div>
+        <div>
+          <div class="wo-name">LOBSTR</div>
+          <div class="wo-desc">Wallet móvil y web · Multisig</div>
+        </div>
+        <span class="wo-arrow">›</span>
+      </div>
+      <div class="wallet-opt" onclick="connectWallet('rabet')">
+        <div class="wo-icon">🔷</div>
+        <div>
+          <div class="wo-name">Rabet</div>
+          <div class="wo-desc">Extension de Stellar Network</div>
+        </div>
+        <span class="wo-arrow">›</span>
+      </div>
+      <div class="wallet-opt" onclick="connectWallet('albedo')">
+        <div class="wo-icon">🌐</div>
+        <div>
+          <div class="wo-name">Albedo</div>
+          <div class="wo-desc">Wallet web sin extensión</div>
+        </div>
+        <span class="wo-arrow">›</span>
+      </div>
+      <div style="text-align:center;padding:14px 0 0;">
+        <p style="font-size:10px;color:var(--text3);">Powered by Stellar Network · Soroban Smart Contracts</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- DETAIL MODAL -->
+<div class="overlay" id="detailModal" onclick="closeIfBg(event,'detailModal')">
+  <div class="modal">
+    <div class="m-handle"></div>
+    <div class="m-head"><h3 id="det-title">POLLO-023</h3><button class="m-close" onclick="closeModal('detailModal')">✕</button></div>
+    <div class="m-body" id="det-body"></div>
+  </div>
+</div>
+
+<!-- INVEST MODAL -->
+<div class="overlay" id="investModal" onclick="closeIfBg(event,'investModal')">
+  <div class="modal">
+    <div class="m-handle"></div>
+    <div class="m-head"><h3>Invertir en Contrato</h3><button class="m-close" onclick="closeModal('investModal')">✕</button></div>
+    <div class="m-body" id="inv-body"></div>
+  </div>
+</div>
+
+<!-- BID MODAL -->
+<div class="overlay" id="bidModal" onclick="closeIfBg(event,'bidModal')">
+  <div class="modal">
+    <div class="m-handle"></div>
+    <div class="m-head"><h3>Pujar en Subasta</h3><button class="m-close" onclick="closeModal('bidModal')">✕</button></div>
+    <div class="m-body" id="bid-body"></div>
+  </div>
+</div>
+
+<!-- SEARCH MODAL -->
+<div class="overlay" id="searchModal" onclick="closeIfBg(event,'searchModal')">
+  <div class="modal" style="border-radius:20px 20px 0 0">
+    <div class="m-handle"></div>
+    <div class="m-head"><h3>Buscar Contrato</h3><button class="m-close" onclick="closeModal('searchModal')">✕</button></div>
+    <div class="m-body">
+      <div class="inv-input-wrap" style="margin-bottom:20px;">
+        <label>ID del contrato o tipo de animal</label>
+        <div class="inv-row">
+          <input type="text" placeholder="Ej: POLLO-023, bovino…" id="searchInput" oninput="doSearch()">
+        </div>
+      </div>
+      <div id="searchResults"></div>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ══════════════════════════════════
+//  DATA
+// ══════════════════════════════════
+const A={
+  pollo:{icon:'🐔',label:'Pollo',dot:'var(--green)'},
+  bovino:{icon:'🐮',label:'Bovino',dot:'var(--cyan)'},
+  ovino:{icon:'🐑',label:'Ovino',dot:'var(--amber)'},
+  conejo:{icon:'🐰',label:'Conejo',dot:'var(--purple)'},
+  cerdo:{icon:'🐷',label:'Cerdo',dot:'var(--pink)'},
+  pavo:{icon:'🦃',label:'Pavo',dot:'var(--orange)'},
+  cabra:{icon:'🐐',label:'Cabra',dot:'var(--teal)'},
+  pato:{icon:'🦆',label:'Pato',dot:'var(--blue)'},
+  codorniz:{icon:'🐦',label:'Codorniz',dot:'#CE93D8'},
+};
+
+const C=[
+  {id:'POLLO-023',t:'pollo',price:1847.50,apr:6.7,exp:21,auc:3842,st:'live',vol:.008,score:100,raza:'Ross 308',prop:'Carne',prod:'Bachoco, Cuautla'},
+  {id:'BOVINO-101',t:'bovino',price:28450,apr:8.2,exp:90,auc:7200,st:'live',vol:.005,score:95,raza:'Angus',prop:'Carne',prod:'Rancho El Porvenir'},
+  {id:'POLLO-024',t:'pollo',price:1623.80,apr:5.9,exp:18,auc:1920,st:'closing',vol:.010,score:88,raza:'Cobb 500',prop:'Carne',prod:'Granja San Miguel'},
+  {id:'OVINO-045',t:'ovino',price:5890,apr:7.1,exp:45,auc:14400,st:'live',vol:.006,score:92,raza:'Suffolk',prop:'Lana/Carne',prod:'Rancho Los Pinos'},
+  {id:'CONEJO-012',t:'conejo',price:432.60,apr:9.3,exp:12,auc:960,st:'closing',vol:.015,score:78,raza:'Nueva Zelanda',prop:'Carne',prod:'Granja Morelos'},
+  {id:'CERDO-078',t:'cerdo',price:12340,apr:7.8,exp:60,auc:21600,st:'live',vol:.004,score:97,raza:'Yorkshire',prop:'Carne',prod:'Porcícola del Sur'},
+  {id:'BOVINO-102',t:'bovino',price:31200,apr:6.1,exp:120,auc:43200,st:'live',vol:.003,score:91,raza:'Hereford',prop:'Carne',prod:'Ganadería Zapata'},
+  {id:'POLLO-028',t:'pollo',price:2105.30,apr:7.4,exp:28,auc:5400,st:'live',vol:.009,score:100,raza:'Plymouth Rock',prop:'Huevo',prod:'Avícola Independencia'},
+  {id:'PAVO-009',t:'pavo',price:3780,apr:8.5,exp:35,auc:10800,st:'live',vol:.007,score:85,raza:'Broad Breasted',prop:'Carne',prod:'Granja Cuautla'},
+  {id:'CABRA-033',t:'cabra',price:7650,apr:6.9,exp:55,auc:18000,st:'live',vol:.005,score:89,raza:'Boer',prop:'Carne/Leche',prod:'Caprino Morelos'},
+  {id:'POLLO-022',t:'pollo',price:1490,apr:5.2,exp:0,auc:0,st:'closed',vol:0,score:100,raza:'Ross 308',prop:'Carne',prod:'Bachoco, Cuautla'},
+  {id:'PATO-015',t:'pato',price:1280.50,apr:10.1,exp:10,auc:480,st:'closing',vol:.012,score:76,raza:'Pekín',prop:'Carne',prod:'Avícola del Valle'},
+  {id:'OVINO-046',t:'ovino',price:6120,apr:6.5,exp:50,auc:16200,st:'live',vol:.006,score:94,raza:'Dorper',prop:'Carne',prod:'Borregos del Norte'},
+  {id:'CONEJO-013',t:'conejo',price:398.20,apr:11.2,exp:8,auc:240,st:'closing',vol:.018,score:70,raza:'Californiano',prop:'Carne',prod:'Granja Familiar Cruz'},
+  {id:'CERDO-079',t:'cerdo',price:11890,apr:8.0,exp:75,auc:28800,st:'live',vol:.004,score:99,raza:'Duroc',prop:'Carne',prod:'Porcícola Tepoztlán'},
+  {id:'BOVINO-103',t:'bovino',price:26800,apr:9.4,exp:65,auc:9000,st:'live',vol:.005,score:90,raza:'Charolais',prop:'Carne',prod:'Rancho San Antonio'},
+  {id:'POLLO-029',t:'pollo',price:1975,apr:6.3,exp:25,auc:4500,st:'live',vol:.009,score:100,raza:'Hubbard',prop:'Carne',prod:'Granja El Sol'},
+  {id:'CABRA-034',t:'cabra',price:8100,apr:5.8,exp:70,auc:25200,st:'live',vol:.004,score:86,raza:'Saanen',prop:'Leche',prod:'Caprinos del Sur'},
+  {id:'PAVO-010',t:'pavo',price:4150,apr:7.7,exp:40,auc:12600,st:'live',vol:.006,score:82,raza:'Nicholas',prop:'Carne',prod:'Granja Oaxaca'},
+  {id:'POLLO-030',t:'pollo',price:2280,apr:5.0,exp:0,auc:0,st:'closed',vol:0,score:100,raza:'Cornish Cross',prop:'Carne',prod:'Avícola Temixco'},
+  {id:'CONEJO-014',t:'conejo',price:510.40,apr:8.8,exp:15,auc:3600,st:'live',vol:.013,score:81,raza:'Rex',prop:'Carne/Piel',prod:'Granja Cuernavaca'},
+  {id:'OVINO-047',t:'ovino',price:5450,apr:7.3,exp:38,auc:11400,st:'live',vol:.007,score:88,raza:'Hampshire',prop:'Carne',prod:'Ovinos Morelos'},
+  {id:'CERDO-080',t:'cerdo',price:13500,apr:6.6,exp:85,auc:32400,st:'live',vol:.003,score:96,raza:'Landrace',prop:'Carne',prod:'Porcinos Central'},
+  {id:'PATO-016',t:'pato',price:1150,apr:9.0,exp:13,auc:2100,st:'live',vol:.011,score:74,raza:'Muscovy',prop:'Carne',prod:'Granja Yautepec'},
+];
+
+// Init sparklines
+C.forEach(c=>{
+  c.spark=[];let v=c.price;
+  for(let i=0;i<24;i++){v+=(Math.random()-.48)*c.price*c.vol;c.spark.push(Math.max(v,c.price*.9))}
+  c.pchg=((c.price-c.spark[0])/c.spark[0]*100);
+  c.base=c.price;
+  c.initAuc=c.auc||1;
+});
+
+let filter='all';
+let walletConnected=false;
+let walletAddr='';
+let activeContractId=null;
+
+// ══════════════════════════════════
+//  RENDER TICKER
+// ══════════════════════════════════
+function renderTicker(){
+  const el=document.getElementById('tickerStrip');
+  el.innerHTML=C.filter(c=>c.st!=='closed').slice(0,10).map(c=>{
+    const dir=c.pchg>=0?'up':'down';
+    return`<div class="tk"><div class="tk-sym">${c.id}</div><div class="tk-price ${dir}" id="tk-${c.id}">${fmtP(c.price)}</div></div>`;
+  }).join('');
+}
+
+// ══════════════════════════════════
+//  RENDER ROWS
+// ══════════════════════════════════
+function renderRows(){
+  const el=document.getElementById('rowsContainer');
+  const list=filter==='all'?C:C.filter(c=>c.t===filter);
+  el.innerHTML=list.map((c,i)=>{
+    const a=A[c.t];const dir=c.pchg>=0;
+    return`<div class="row ${c.st==='closed'?'closed':''}" data-t="${c.t}" style="animation-delay:${i*25}ms" onclick="openDetail('${c.id}')">
+      <div class="a-cell">
+        <div class="a-ico ${c.t}">${a.icon}</div>
+        <div><div class="a-name">${c.id}</div><div class="a-sub"><span class="dot" style="background:${a.dot}"></span>${a.label}/MXN</div></div>
+      </div>
+      <div class="p-cell">
+        <div class="p-val" id="pv-${c.id}">${fmtP(c.price)}</div>
+        <div class="p-chg ${dir?'up':'down'}" id="pc-${c.id}">${dir?'▲':'▼'} ${Math.abs(c.pchg).toFixed(2)}%</div>
+      </div>
+      <div class="sp-cell"><canvas id="sp-${c.id}" width="64" height="26"></canvas></div>
+      <div class="cd-cell">
+        <div class="cd-val ${c.st}" id="cd-${c.id}">${c.st==='closed'?'CERRADO':fmtCD(c.auc)}</div>
+        <div class="cd-lbl">${c.st==='closed'?'Finalizado':c.st==='closing'?'Cerrando':'Subasta'}</div>
+      </div>
+    </div>`;
+  }).join('');
+  list.forEach(c=>drawSpark(c));
+}
+
+// ══════════════════════════════════
+//  SPARKLINE
+// ══════════════════════════════════
+function drawSpark(c){
+  const cv=document.getElementById(`sp-${c.id}`);if(!cv)return;
+  const ctx=cv.getContext('2d');const dpr=window.devicePixelRatio||1;
+  cv.width=64*dpr;cv.height=26*dpr;ctx.scale(dpr,dpr);
+  cv.style.width='64px';cv.style.height='26px';
+  const d=c.spark,mn=Math.min(...d),mx=Math.max(...d),rg=mx-mn||1;
+  ctx.clearRect(0,0,64,26);ctx.beginPath();
+  d.forEach((v,i)=>{
+    const x=(i/(d.length-1))*64,y=26-((v-mn)/rg)*22-2;
+    i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+  });
+  const up=d[d.length-1]>=d[0];
+  ctx.strokeStyle=up?'#00E676':'#FF5252';ctx.lineWidth=1.3;ctx.stroke();
+  ctx.lineTo(64,26);ctx.lineTo(0,26);ctx.closePath();
+  const g=ctx.createLinearGradient(0,0,0,26);
+  g.addColorStop(0,up?'rgba(0,230,118,.12)':'rgba(255,82,82,.12)');
+  g.addColorStop(1,'transparent');ctx.fillStyle=g;ctx.fill();
+}
+
+// ══════════════════════════════════
+//  DETAIL MODAL
+// ══════════════════════════════════
+function openDetail(id){
+  const c=C.find(x=>x.id===id);if(!c)return;
+  activeContractId=id;
+  const a=A[c.t];
+  const dir=c.pchg>=0;
+  const expDate=new Date(Date.now()+c.exp*864e5).toLocaleDateString('es-MX',{day:'2-digit',month:'short',year:'numeric'});
+  const aucPct=c.initAuc>0?Math.max(0,Math.min(100,((c.initAuc-c.auc)/c.initAuc)*100)):100;
+
+  let ob='';
+  for(let i=0;i<5;i++){
+    const bprice=(c.price*(1-(.001*(i+1)))).toFixed(2);
+    const bamt=(Math.random()*5000+500).toFixed(0);
+    ob+=`<div class="ob-row buy"><span style="color:var(--green)">${fmtP(parseFloat(bprice))}</span><span>${bamt}</span><span>${fmtP(parseFloat(bprice)*parseInt(bamt)/1000)}</span></div>`;
+  }
+  let os='';
+  for(let i=0;i<5;i++){
+    const sprice=(c.price*(1+(.001*(i+1)))).toFixed(2);
+    const samt=(Math.random()*3000+300).toFixed(0);
+    os+=`<div class="ob-row sell"><span style="color:var(--red)">${fmtP(parseFloat(sprice))}</span><span>${samt}</span><span>${fmtP(parseFloat(sprice)*parseInt(samt)/1000)}</span></div>`;
+  }
+
+  document.getElementById('det-title').textContent=c.id;
+  document.getElementById('det-body').innerHTML=`
+    <div class="det-hero">
+      <div class="dh-icon">${a.icon}</div>
+      <div class="dh-id">${c.id}</div>
+      <div class="dh-sub">${a.label} · ${c.raza} · ${c.prop}</div>
+      <div class="dh-tags">
+        <span class="tag ${c.st==='live'?'g':c.st==='closing'?'a':'r'}">${c.st==='live'?'En Subasta':c.st==='closing'?'Cerrando':'Cerrado'}</span>
+        <span class="tag c">Score: ${c.score}</span>
+      </div>
+    </div>
+
+    <div class="price-hero">
+      <div class="ph-val" id="det-price">${fmtP(c.price)}</div>
+      <div class="ph-chg ${dir?'up':'down'}" id="det-chg">${dir?'▲':'▼'} ${Math.abs(c.pchg).toFixed(2)}%</div>
+    </div>
+
+    <div class="chart-area">
+      <div class="chart-tabs">
+        <button class="chart-tab on">1H</button>
+        <button class="chart-tab">4H</button>
+        <button class="chart-tab">1D</button>
+        <button class="chart-tab">7D</button>
+      </div>
+      <canvas id="detChart" style="width:100%;height:120px"></canvas>
+    </div>
+
+    <div class="info-grid">
+      <div class="info-card"><div class="ic-label">APR Actual</div><div class="ic-val g" id="det-apr">${c.apr.toFixed(1)}%</div></div>
+      <div class="info-card"><div class="ic-label">Vencimiento</div><div class="ic-val ${c.exp<=10?'r':c.exp<=30?'a':''}">${c.exp>0?c.exp+'d':'Expirado'}</div></div>
+      <div class="info-card"><div class="ic-label">Productor</div><div class="ic-val" style="font-size:11px">${c.prod}</div></div>
+      <div class="info-card"><div class="ic-label">Fecha Exp.</div><div class="ic-val" style="font-size:12px">${expDate}</div></div>
+    </div>
+
+    <div class="timer-bar">
+      <div class="tb-label">⏱ Tiempo restante de subasta</div>
+      <div class="tb-val ${c.st}" id="det-cd">${c.st==='closed'?'CERRADO':fmtCD(c.auc)}</div>
+      <div class="tb-progress"><div class="tb-fill ${c.st==='closing'?'closing':''}" style="width:${aucPct}%"></div></div>
+    </div>
+
+    <div class="ob-section">
+      <div class="ob-title"><span class="dot-live"></span> Libro de Órdenes</div>
+      <div class="ob-head"><span>Precio</span><span>Cantidad</span><span>Total</span></div>
+      ${os}
+      <div style="text-align:center;padding:6px 0;font-family:var(--mono);font-size:14px;font-weight:700;color:var(--text)">${fmtP(c.price)}</div>
+      ${ob}
+    </div>
+
+    <div class="act-row">
+      <button class="act-btn invest" onclick="openInvest('${c.id}')" ${c.st==='closed'||!walletConnected?'disabled':''}>${walletConnected?'💰 Invertir':'🔒 Conectar Wallet'}</button>
+      <button class="act-btn bid" onclick="openBid('${c.id}')" ${c.st==='closed'||!walletConnected?'disabled':''}>📊 Pujar APR</button>
+    </div>
+    ${!walletConnected?'<p style="text-align:center;font-size:11px;color:var(--text3)">Conecta tu wallet de Stellar para operar</p>':''}
+  `;
+
+  // Draw detail chart
+  setTimeout(()=>drawDetailChart(c),50);
+  openModal('detailModal');
+}
+
+function drawDetailChart(c){
+  const cv=document.getElementById('detChart');if(!cv)return;
+  const ctx=cv.getContext('2d');const dpr=window.devicePixelRatio||1;
+  const W=cv.clientWidth,H=120;
+  cv.width=W*dpr;cv.height=H*dpr;ctx.scale(dpr,dpr);
+  const d=c.spark;const mn=Math.min(...d),mx=Math.max(...d),rg=mx-mn||1;
+  // Grid lines
+  ctx.strokeStyle='rgba(28,38,64,.6)';ctx.lineWidth=.5;
+  for(let i=0;i<5;i++){const y=i*(H/4);ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
+  // Line
+  ctx.beginPath();
+  d.forEach((v,i)=>{const x=(i/(d.length-1))*W,y=H-((v-mn)/rg)*(H-10)-5;i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);});
+  const up=d[d.length-1]>=d[0];
+  ctx.strokeStyle=up?'#00E676':'#FF5252';ctx.lineWidth=2;ctx.stroke();
+  // Fill
+  const lastY=H-((d[d.length-1]-mn)/rg)*(H-10)-5;
+  ctx.lineTo(W,H);ctx.lineTo(0,H);ctx.closePath();
+  const g=ctx.createLinearGradient(0,0,0,H);
+  g.addColorStop(0,up?'rgba(0,230,118,.18)':'rgba(255,82,82,.18)');
+  g.addColorStop(1,'transparent');ctx.fillStyle=g;ctx.fill();
+  // Dot
+  const lx=W,ly=H-((d[d.length-1]-mn)/rg)*(H-10)-5;
+  ctx.beginPath();ctx.arc(lx,ly,3,0,Math.PI*2);ctx.fillStyle=up?'#00E676':'#FF5252';ctx.fill();
+}
+
+// ══════════════════════════════════
+//  INVEST MODAL
+// ══════════════════════════════════
+function openInvest(id){
+  if(!walletConnected){toast('🔒 Conecta tu wallet primero');return;}
+  const c=C.find(x=>x.id===id);if(!c)return;
+  const a=A[c.t];
+  document.getElementById('inv-body').innerHTML=`
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
+      <div class="a-ico ${c.t}" style="width:38px;height:38px;font-size:19px">${a.icon}</div>
+      <div><div style="font-family:var(--mono);font-weight:700;font-size:14px">${c.id}</div>
+      <div style="font-size:11px;color:var(--text3)">${a.label} · APR ${c.apr.toFixed(1)}% · ${c.exp}d restantes</div></div>
+    </div>
+
+    <div class="inv-input-wrap">
+      <label>Monto a invertir</label>
+      <div class="inv-row">
+        <input type="number" placeholder="0.00" id="invAmount" oninput="updateInvSummary('${id}')">
+        <span class="inv-curr">XLM</span>
+      </div>
+    </div>
+    <div class="inv-preset">
+      <button onclick="setInvAmt(100,'${id}')">100</button>
+      <button onclick="setInvAmt(500,'${id}')">500</button>
+      <button onclick="setInvAmt(1000,'${id}')">1,000</button>
+      <button onclick="setInvAmt(5000,'${id}')">5,000</button>
+    </div>
+
+    <div class="inv-summary" id="invSummary">
+      <div class="is-row"><span class="is-l">Precio del contrato</span><span class="is-v">${fmtP(c.price)} MXN</span></div>
+      <div class="is-row"><span class="is-l">APR estimado</span><span class="is-v g">${c.apr.toFixed(1)}%</span></div>
+      <div class="is-row"><span class="is-l">Vencimiento</span><span class="is-v">${c.exp} días</span></div>
+      <div class="is-row"><span class="is-l">Rendimiento estimado</span><span class="is-v g" id="invYield">$0.00</span></div>
+      <div class="is-row"><span class="is-l">Fee de red (Stellar)</span><span class="is-v">0.00001 XLM</span></div>
+    </div>
+
+    <button class="act-full green" onclick="confirmInvest('${id}')">Confirmar Inversión</button>
+    <button class="act-full outline" onclick="closeModal('investModal')">Cancelar</button>
+  `;
+  openModal('investModal');
+}
+
+function setInvAmt(val,id){
+  document.getElementById('invAmount').value=val;
+  updateInvSummary(id);
+}
+
+function updateInvSummary(id){
+  const c=C.find(x=>x.id===id);if(!c)return;
+  const amt=parseFloat(document.getElementById('invAmount').value)||0;
+  const yld=(amt*c.apr/100*(c.exp/365)).toFixed(2);
+  document.getElementById('invYield').textContent='$'+yld+' XLM';
+}
+
+function confirmInvest(id){
+  const amt=parseFloat(document.getElementById('invAmount').value)||0;
+  if(amt<=0){toast('⚠️ Ingresa un monto válido');return;}
+  closeModal('investModal');
+  closeModal('detailModal');
+  toast('✅ Inversión de '+amt+' XLM confirmada en '+id);
+}
+
+// ══════════════════════════════════
+//  BID MODAL
+// ══════════════════════════════════
+function openBid(id){
+  if(!walletConnected){toast('🔒 Conecta tu wallet primero');return;}
+  const c=C.find(x=>x.id===id);if(!c)return;
+  const a=A[c.t];
+  document.getElementById('bid-body').innerHTML=`
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
+      <div class="a-ico ${c.t}" style="width:38px;height:38px;font-size:19px">${a.icon}</div>
+      <div><div style="font-family:var(--mono);font-weight:700;font-size:14px">${c.id}</div>
+      <div style="font-size:11px;color:var(--text3)">APR actual: ${c.apr.toFixed(1)}% · Subasta: ${fmtCD(c.auc)}</div></div>
+    </div>
+
+    <p style="font-size:12px;color:var(--text2);margin-bottom:14px;line-height:1.6">
+      Propón un APR para este contrato. Si tu oferta es aceptada al cierre de la subasta, obtendrás el rendimiento pactado.
+    </p>
+
+    <div class="inv-input-wrap">
+      <label>Tu oferta de APR (%)</label>
+      <div class="inv-row">
+        <input type="number" step="0.1" placeholder="${c.apr.toFixed(1)}" id="bidApr" value="${(c.apr+0.5).toFixed(1)}">
+        <span class="inv-curr">% APR</span>
+      </div>
+    </div>
+
+    <div class="inv-input-wrap">
+      <label>Capital a comprometer (XLM)</label>
+      <div class="inv-row">
+        <input type="number" placeholder="0.00" id="bidCap">
+        <span class="inv-curr">XLM</span>
+      </div>
+    </div>
+
+    <div class="inv-summary" style="margin-top:14px">
+      <div class="is-row"><span class="is-l">APR actual del mercado</span><span class="is-v">${c.apr.toFixed(1)}%</span></div>
+      <div class="is-row"><span class="is-l">Tu oferta</span><span class="is-v g">${(c.apr+0.5).toFixed(1)}%</span></div>
+      <div class="is-row"><span class="is-l">Cierre de subasta</span><span class="is-v">${fmtCD(c.auc)}</span></div>
+      <div class="is-row"><span class="is-l">Gas fee</span><span class="is-v">0.00001 XLM</span></div>
+    </div>
+
+    <button class="act-full green" onclick="confirmBid('${id}')">Enviar Puja</button>
+    <button class="act-full outline" onclick="closeModal('bidModal')">Cancelar</button>
+  `;
+  openModal('bidModal');
+}
+
+function confirmBid(id){
+  const apr=parseFloat(document.getElementById('bidApr').value)||0;
+  const cap=parseFloat(document.getElementById('bidCap').value)||0;
+  if(apr<=0||cap<=0){toast('⚠️ Completa todos los campos');return;}
+  closeModal('bidModal');
+  toast('✅ Puja de '+apr+'% APR enviada para '+id);
+}
+
+// ══════════════════════════════════
+//  SEARCH
+// ══════════════════════════════════
+function doSearch(){
+  const q=document.getElementById('searchInput').value.toLowerCase().trim();
+  const res=document.getElementById('searchResults');
+  if(!q){res.innerHTML='';return;}
+  const matches=C.filter(c=>c.id.toLowerCase().includes(q)||c.t.includes(q));
+  res.innerHTML=matches.slice(0,8).map(c=>{
+    const a=A[c.t];
+    return`<div class="row" style="border-radius:8px;margin-bottom:4px;border:1px solid var(--border);grid-template-columns:2fr 1fr" onclick="closeModal('searchModal');openDetail('${c.id}')">
+      <div class="a-cell"><div class="a-ico ${c.t}">${a.icon}</div><div><div class="a-name">${c.id}</div><div class="a-sub">${a.label}/MXN</div></div></div>
+      <div class="p-cell"><div class="p-val">${fmtP(c.price)}</div></div>
+    </div>`;
+  }).join('')||'<p style="color:var(--text3);font-size:12px;text-align:center;padding:20px">Sin resultados</p>';
+}
+
+// ══════════════════════════════════
+//  WALLET CONNECT
+// ══════════════════════════════════
+function connectWallet(provider){
+  walletConnected=true;
+  const addrs={
+    freighter:'GBRX…4K7F',lobstr:'GCML…9P2Q',rabet:'GDKR…TN8E',albedo:'GBZF…L3MR'
+  };
+  walletAddr=addrs[provider]||'GXXX…XXXX';
+
+  closeModal('walletModal');
+
+  // Update UI
+  document.getElementById('walletBtn').classList.add('connected');
+  document.getElementById('walletBtnText').textContent=walletAddr;
+  document.getElementById('walletBtn').innerHTML=`<span class="w-dot"></span><span>${walletAddr}</span>`;
+  document.getElementById('connBar').classList.add('show');
+  document.getElementById('connAddr').textContent=walletAddr;
+
+  toast('✅ Wallet conectada · '+provider.charAt(0).toUpperCase()+provider.slice(1));
+}
+
+// ══════════════════════════════════
+//  MODAL HELPERS
+// ══════════════════════════════════
+function openModal(id){document.getElementById(id).classList.add('show')}
+function closeModal(id){document.getElementById(id).classList.remove('show')}
+function closeIfBg(e,id){if(e.target===e.currentTarget)closeModal(id)}
+
+// ══════════════════════════════════
+//  TABS
+// ══════════════════════════════════
+function setFilter(btn,t){
+  document.querySelectorAll('.tab').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');filter=t;renderRows();
+}
+
+// ══════════════════════════════════
+//  FORMATTERS
+// ══════════════════════════════════
+function fmtP(p){
+  if(p>=10000)return'$'+p.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g,',');
+  if(p>=1000)return'$'+p.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g,',');
+  return'$'+p.toFixed(2);
+}
+function fmtCD(s){
+  if(s<=0)return'CERRADO';
+  const h=Math.floor(s/3600),m=Math.floor((s%3600)/60),sec=s%60;
+  if(h>0)return h+'h '+String(m).padStart(2,'0')+'m';
+  return String(m).padStart(2,'0')+'m '+String(sec).padStart(2,'0')+'s';
+}
+
+// ══════════════════════════════════
+//  TOAST
+// ══════════════════════════════════
+function toast(msg){
+  const el=document.getElementById('toast');
+  el.textContent=msg;el.classList.add('show');
+  setTimeout(()=>el.classList.remove('show'),2800);
+}
+
+// ══════════════════════════════════
+//  REAL-TIME TICK
+// ══════════════════════════════════
+function tick(){
+  C.forEach(c=>{
+    if(c.st==='closed')return;
+    // Price
+    const d=(Math.random()-.48)*c.base*c.vol;
+    c.price=Math.max(c.price+d,c.base*.85);
+    c.spark.push(c.price);if(c.spark.length>24)c.spark.shift();
+    c.pchg=((c.price-c.spark[0])/c.spark[0]*100);
+    // APR
+    c.apr=Math.max(1,Math.min(15,c.apr+(Math.random()-.5)*.12));
+    // Countdown
+    c.auc=Math.max(0,c.auc-1);
+    if(c.auc<=0)c.st='closed';
+    else if(c.auc<1800&&c.st==='live')c.st='closing';
+
+    // DOM updates
+    const pv=document.getElementById(`pv-${c.id}`);
+    const pc=document.getElementById(`pc-${c.id}`);
+    const cd=document.getElementById(`cd-${c.id}`);
+    const tk=document.getElementById(`tk-${c.id}`);
+    if(pv){
+      const old=pv.textContent,nw=fmtP(c.price);
+      if(old!==nw){pv.textContent=nw;pv.classList.remove('fl-g','fl-r');void pv.offsetWidth;pv.classList.add(d>=0?'fl-g':'fl-r');}
+    }
+    if(pc){const up=c.pchg>=0;pc.textContent=`${up?'▲':'▼'} ${Math.abs(c.pchg).toFixed(2)}%`;pc.className=`p-chg ${up?'up':'down'}`;}
+    if(cd){
+      if(c.st==='closed'){cd.textContent='CERRADO';cd.className='cd-val closed';const row=document.getElementById(`row-${c.id}`);/**/}
+      else{cd.textContent=fmtCD(c.auc);cd.className=`cd-val ${c.st}`;}
+    }
+    if(tk)tk.textContent=fmtP(c.price);
+    drawSpark(c);
+
+    // Update detail if open
+    const dp=document.getElementById('det-price');
+    if(dp&&activeContractId===c.id){
+      dp.textContent=fmtP(c.price);
+      const dc=document.getElementById('det-chg');
+      if(dc){const up=c.pchg>=0;dc.textContent=`${up?'▲':'▼'} ${Math.abs(c.pchg).toFixed(2)}%`;dc.className=`ph-chg ${up?'up':'down'}`;}
+      const da=document.getElementById('det-apr');
+      if(da)da.textContent=c.apr.toFixed(1)+'%';
+      const dcd=document.getElementById('det-cd');
+      if(dcd){dcd.textContent=c.st==='closed'?'CERRADO':fmtCD(c.auc);dcd.className=`tb-val ${c.st}`;}
+      drawDetailChart(c);
+    }
+  });
+}
+
+// ══════════════════════════════════
+//  INIT
+// ══════════════════════════════════
+renderTicker();
+renderRows();
+setInterval(tick,1000);
+setInterval(()=>{
+  const el=document.getElementById('pnlVal');
+  const v=parseFloat(el.textContent.replace(/,/g,''));
+  const nv=(v+(Math.random()-.45)*10).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g,',');
+  el.textContent=nv;
+},3000);
+</script>
+</body>
+</html>

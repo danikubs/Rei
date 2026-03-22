@@ -1,0 +1,1447 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>REI — Futuros animal</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg: #F4F6FA;
+  --card: #FFFFFF;
+  --primary: #2B6CB0;
+  --primary-light: #EBF4FF;
+  --primary-dark: #1A4971;
+  --accent: #38A169;
+  --accent-light: #E6F7EE;
+  --warning: #DD6B20;
+  --warning-light: #FFF5EB;
+  --text: #1A202C;
+  --text-secondary: #718096;
+  --border: #E2E8F0;
+  --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md: 0 4px 14px rgba(0,0,0,0.08);
+  --shadow-lg: 0 10px 30px rgba(0,0,0,0.1);
+  --radius: 14px;
+  --radius-sm: 8px;
+  --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+html, body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── Phone Frame ── */
+.phone-frame {
+  width: 100%;
+  max-width: 420px;
+  min-height: 100vh;
+  margin: 0 auto;
+  background: var(--bg);
+  position: relative;
+  overflow: hidden;
+}
+
+/* ── Screens ── */
+.screen {
+  display: none;
+  flex-direction: column;
+  min-height: 100vh;
+  animation: fadeIn 0.35s ease;
+  padding-bottom: 30px;
+}
+.screen.active { display: flex; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Top Bar ── */
+.topbar {
+  display: flex;
+  align-items: center;
+  padding: 16px 20px;
+  gap: 12px;
+  background: var(--card);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+.topbar .back-btn {
+  width: 36px; height: 36px;
+  border: none; background: var(--bg);
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  transition: var(--transition);
+  flex-shrink: 0;
+}
+.topbar .back-btn:hover { background: var(--border); }
+.topbar .back-btn svg { width: 18px; height: 18px; color: var(--text); }
+.topbar h2 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 17px;
+  font-weight: 600;
+  flex: 1;
+}
+.topbar .home-btn {
+  width: 36px; height: 36px;
+  border: none; background: var(--primary-light);
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  transition: var(--transition);
+  flex-shrink: 0;
+}
+.topbar .home-btn:hover { background: #D6E8FF; }
+.topbar .home-btn svg { width: 16px; height: 16px; color: var(--primary); }
+
+/* ── Content Area ── */
+.content { padding: 20px; flex: 1; }
+
+/* ── Splash Screen ── */
+.splash {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: linear-gradient(160deg, #2B6CB0 0%, #1A4971 50%, #153E63 100%);
+  text-align: center;
+  padding: 40px;
+}
+.splash .logo-circle {
+  width: 120px; height: 120px;
+  background: rgba(255,255,255,0.15);
+  border-radius: 32px;
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 28px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.2);
+  animation: pulse 2.5s infinite ease-in-out;
+}
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.04); }
+}
+.splash .logo-circle span {
+  font-family: 'Outfit', sans-serif;
+  font-size: 48px;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: -1px;
+}
+.splash h1 {
+  font-family: 'Outfit', sans-serif;
+  color: #fff;
+  font-size: 22px;
+  font-weight: 400;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.splash p {
+  color: rgba(255,255,255,0.6);
+  font-size: 14px;
+  margin-bottom: 48px;
+}
+.splash .enter-btn {
+  padding: 14px 56px;
+  background: #fff;
+  color: var(--primary-dark);
+  border: none;
+  border-radius: 50px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+}
+.splash .enter-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(0,0,0,0.3); }
+
+/* ── Forms ── */
+.form-group { margin-bottom: 16px; }
+.form-group label {
+  display: block;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+}
+.form-group input, .form-group select, .form-group textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  background: var(--card);
+  transition: var(--transition);
+  color: var(--text);
+}
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(43,108,176,0.1);
+}
+
+/* ── Buttons ── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 13px 24px;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  width: 100%;
+}
+.btn-primary { background: var(--primary); color: #fff; }
+.btn-primary:hover { background: var(--primary-dark); }
+.btn-accent { background: var(--accent); color: #fff; }
+.btn-accent:hover { background: #2F8A59; }
+.btn-outline {
+  background: transparent;
+  border: 1.5px solid var(--border);
+  color: var(--text);
+}
+.btn-outline:hover { border-color: var(--primary); color: var(--primary); }
+.btn-sm { padding: 10px 16px; font-size: 13px; }
+.btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ── Cards ── */
+.card {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 18px;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+  margin-bottom: 14px;
+  transition: var(--transition);
+}
+.card:hover { box-shadow: var(--shadow-md); }
+.card.clickable { cursor: pointer; }
+
+/* ── Grid Options ── */
+.options-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.option-card {
+  background: var(--card);
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px 14px;
+  text-align: center;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.option-card:hover { border-color: var(--primary); transform: translateY(-2px); }
+.option-card.selected { border-color: var(--primary); background: var(--primary-light); }
+.option-card .icon {
+  width: 44px; height: 44px;
+  background: var(--primary-light);
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 10px;
+  font-size: 22px;
+}
+.option-card.selected .icon { background: var(--primary); }
+.option-card h4 {
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+.option-card p {
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+/* ── Section Headers ── */
+.section-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 14px;
+  color: var(--text);
+}
+.section-subtitle {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-bottom: 16px;
+  line-height: 1.5;
+}
+
+/* ── Progress Bar ── */
+.progress-container {
+  background: #EDF2F7;
+  border-radius: 50px;
+  height: 10px;
+  overflow: hidden;
+  margin-bottom: 6px;
+}
+.progress-bar {
+  height: 100%;
+  border-radius: 50px;
+  background: linear-gradient(90deg, var(--primary), var(--accent));
+  transition: width 0.6s ease;
+}
+
+/* ── Tags ── */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 50px;
+  font-size: 11px;
+  font-weight: 600;
+}
+.tag-blue { background: var(--primary-light); color: var(--primary); }
+.tag-green { background: var(--accent-light); color: var(--accent); }
+.tag-orange { background: var(--warning-light); color: var(--warning); }
+
+/* ── Divider ── */
+.divider {
+  height: 1px;
+  background: var(--border);
+  margin: 16px 0;
+}
+
+/* ── List Items ── */
+.list-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  margin-bottom: 10px;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.list-item:hover { border-color: var(--primary); background: var(--primary-light); }
+.list-item .li-icon {
+  width: 40px; height: 40px;
+  background: var(--primary-light);
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+.list-item .li-info { flex: 1; }
+.list-item .li-info h4 { font-size: 14px; font-weight: 600; }
+.list-item .li-info p { font-size: 12px; color: var(--text-secondary); }
+.list-item .li-arrow { color: var(--text-secondary); font-size: 14px; }
+
+/* ── Stats Row ── */
+.stats-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.stat-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 14px;
+  text-align: center;
+}
+.stat-card .stat-value {
+  font-family: 'Outfit', sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--primary);
+}
+.stat-card .stat-label {
+  font-size: 11px;
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+
+/* ── Diagnostic Item ── */
+.diag-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  margin-bottom: 8px;
+  background: var(--card);
+  cursor: pointer;
+  transition: var(--transition);
+}
+.diag-item:hover { border-color: var(--primary); }
+.diag-item.completed { border-color: var(--accent); background: var(--accent-light); }
+.diag-item .diag-check {
+  width: 24px; height: 24px;
+  border: 2px solid var(--border);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  font-size: 12px;
+}
+.diag-item.completed .diag-check {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+.diag-item .diag-info { flex: 1; }
+.diag-item .diag-info h4 { font-size: 13px; font-weight: 600; }
+.diag-item .diag-info p { font-size: 11px; color: var(--text-secondary); }
+.diag-item .diag-score {
+  font-family: 'Outfit', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+/* ── Balance Display ── */
+.balance-display {
+  text-align: center;
+  padding: 28px 20px;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+  border-radius: var(--radius);
+  color: #fff;
+  margin-bottom: 20px;
+}
+.balance-display .bal-label { font-size: 12px; opacity: 0.75; margin-bottom: 4px; }
+.balance-display .bal-amount {
+  font-family: 'Outfit', sans-serif;
+  font-size: 36px;
+  font-weight: 700;
+}
+.balance-display .bal-sub { font-size: 12px; opacity: 0.6; margin-top: 4px; }
+
+/* ── Tabs ── */
+.tab-bar {
+  display: flex;
+  background: var(--card);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  padding: 4px;
+  margin-bottom: 16px;
+}
+.tab-bar .tab {
+  flex: 1;
+  padding: 10px 8px;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 600;
+  border: none;
+  background: transparent;
+  border-radius: 6px;
+  cursor: pointer;
+  color: var(--text-secondary);
+  transition: var(--transition);
+}
+.tab-bar .tab.active { background: var(--primary); color: #fff; }
+
+/* ── Toggle Auth ── */
+.auth-toggle {
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+  margin-top: 16px;
+}
+.auth-toggle span { font-size: 13px; color: var(--text-secondary); }
+.auth-toggle a {
+  font-size: 13px; color: var(--primary); font-weight: 600;
+  cursor: pointer; text-decoration: none;
+}
+
+/* ── Info Row ── */
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+}
+.info-row:last-child { border-bottom: none; }
+.info-row .ir-label { font-size: 13px; color: var(--text-secondary); }
+.info-row .ir-value { font-size: 13px; font-weight: 600; }
+
+/* ── Action Buttons Grid ── */
+.action-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.action-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 18px 10px;
+  background: var(--card);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: var(--transition);
+  text-align: center;
+}
+.action-card:hover { border-color: var(--primary); transform: translateY(-2px); }
+.action-card.disabled { opacity: 0.35; pointer-events: none; }
+.action-card .ac-icon {
+  width: 40px; height: 40px;
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px;
+}
+.action-card .ac-icon.blue { background: var(--primary-light); }
+.action-card .ac-icon.green { background: var(--accent-light); }
+.action-card .ac-icon.orange { background: var(--warning-light); }
+.action-card h4 { font-size: 12px; font-weight: 600; }
+.action-card p { font-size: 10px; color: var(--text-secondary); }
+
+/* ── Responsive ── */
+@media (min-width: 480px) {
+  body { background: #E8ECF2; }
+  .phone-frame {
+    max-width: 420px;
+    min-height: 100vh;
+    box-shadow: var(--shadow-lg);
+  }
+}
+
+/* ── Notification Toast ── */
+.toast {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%) translateY(80px);
+  background: var(--text);
+  color: #fff;
+  padding: 12px 24px;
+  border-radius: 50px;
+  font-size: 13px;
+  font-weight: 500;
+  z-index: 999;
+  transition: transform 0.4s ease;
+  white-space: nowrap;
+}
+.toast.show { transform: translateX(-50%) translateY(0); }
+
+/* ── Render APR Badge ── */
+.apr-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px;
+  border-radius: 50px;
+  font-size: 12px;
+  font-weight: 700;
+  font-family: 'Outfit', sans-serif;
+}
+.apr-badge.positive { background: var(--accent-light); color: var(--accent); }
+.apr-badge.neutral { background: #FEF3C7; color: #D97706; }
+
+</style>
+</head>
+<body>
+
+<div class="phone-frame" id="app">
+
+  <!-- ══════════ SCREEN 1: SPLASH ══════════ -->
+  <div class="screen active" id="screen-splash">
+    <div class="splash">
+      <div class="logo-circle"><span>Rei</span></div>
+      <h1>Futuros de Produccion Animal</h1>
+      <p>Activos agropecuarios · Finanzas · Inversiones</p>
+      <button class="enter-btn" onclick="goTo('screen-auth')">Iniciar</button>
+    </div>
+  </div>
+
+  <!-- ══════════ SCREEN 2: AUTH ══════════ -->
+  <div class="screen" id="screen-auth">
+    <div class="topbar">
+      <button class="back-btn" onclick="goTo('screen-splash')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></button>
+      <h2 id="auth-title">Iniciar Sesión</h2>
+    </div>
+    <div class="content">
+      <div style="text-align:center; margin: 20px 0 30px;">
+        <div style="width:72px;height:72px;background:var(--primary);border-radius:20px;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;">
+          <span style="font-family:'Outfit';font-size:28px;font-weight:800;color:#fff;">Rei</span>
+        </div>
+        <p style="font-size:13px;color:var(--text-secondary);" id="auth-subtitle">Ingresa tus credenciales para continuar</p>
+      </div>
+
+      <div id="login-form">
+        <div class="form-group">
+          <label>Correo electrónico</label>
+          <input type="email" placeholder="productor@gmail.com" id="input-email" value="productor@gmail.com">
+        </div>
+        <div class="form-group">
+          <label>Contraseña</label>
+          <input type="password" placeholder="ILOVEBAF" id="input-pass" value="ILOVEBAF">
+        </div>
+        <button class="btn btn-primary" onclick="doLogin()" style="margin-top:8px;">Iniciar Sesión</button>
+        <div style="display:flex;align-items:center;gap:10px;margin:14px 0 10px;">
+          <div style="height:1px;background:var(--border);flex:1;"></div>
+          <span style="font-size:11px;color:var(--text-secondary);">o wallet Stellar</span>
+          <div style="height:1px;background:var(--border);flex:1;"></div>
+        </div>
+        <div id="wallet-kit-container" style="margin-bottom:8px;"></div>
+        <button class="btn btn-outline" onclick="connectWalletManual()">
+          Conectar wallet manualmente (G...)
+        </button>
+        <div class="auth-toggle" style="margin-top:10px;">
+          <span>Credenciales demo: productor@gmail.com / ILOVEBAF</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════ SCREEN 3: CATEGORÍAS ══════════ -->
+  <div class="screen" id="screen-category">
+    <div class="topbar">
+      <button class="back-btn" onclick="goTo('screen-auth')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></button>
+      <h2>Elige tu Categoría</h2>
+    </div>
+    <div class="content">
+      <p class="section-subtitle">Selecciona el tipo de producción con el que trabajas.</p>
+      <div class="options-grid">
+        <div class="option-card" onclick="selectCategory(this, 'Doméstico')">
+          <div class="icon">🏠</div>
+          <h4>Doméstico</h4>
+          <p>Animales de compañía</p>
+        </div>
+        <div class="option-card" onclick="selectCategory(this, 'F. Silvestre')">
+          <div class="icon">🌿</div>
+          <h4>F. Silvestre</h4>
+          <p>Fauna silvestre</p>
+        </div>
+        <div class="option-card" onclick="selectCategory(this, 'Produccion')" id="cat-prod">
+          <div class="icon">🐄</div>
+          <h4>Producción</h4>
+          <p>Animales de granja</p>
+        </div>
+        <div class="option-card" onclick="selectCategory(this, 'Otro')">
+          <div class="icon">📋</div>
+          <h4>Otro</h4>
+          <p>Categoría especial</p>
+        </div>
+      </div>
+      <button class="btn btn-primary" id="btn-cat-next" disabled onclick="goTo('screen-subcategory')">Continuar</button>
+    </div>
+  </div>
+
+  <!-- ══════════ SCREEN 4: SUBCATEGORÍAS ══════════ -->
+  <div class="screen" id="screen-subcategory">
+    <div class="topbar">
+      <button class="back-btn" onclick="goTo('screen-category')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></button>
+      <h2>Subcategoría</h2>
+      <button class="home-btn" onclick="goTo('screen-dashboard')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12l9-9 9 9"/><path d="M9 21V9h6v12"/></svg></button>
+    </div>
+    <div class="content">
+      <p class="section-subtitle">Producción → Selecciona una subcategoría</p>
+      <div class="options-grid">
+        <div class="option-card" onclick="selectSubcat(this, 'Avicultura')">
+          <div class="icon">🐔</div>
+          <h4>Avicultura</h4>
+          <p>Aves de producción</p>
+        </div>
+        <div class="option-card" onclick="selectSubcat(this, 'Acuicultura')">
+          <div class="icon">🐟</div>
+          <h4>Acuicultura</h4>
+          <p>Producción acuática</p>
+        </div>
+        <div class="option-card" onclick="selectSubcat(this, 'Ganadería')">
+          <div class="icon">🐮</div>
+          <h4>Ganadería</h4>
+          <p>Bovinos, porcinos</p>
+        </div>
+        <div class="option-card" onclick="selectSubcat(this, 'Apicultura')">
+          <div class="icon">🐝</div>
+          <h4>Apicultura</h4>
+          <p>Producción de miel</p>
+        </div>
+      </div>
+      <button class="btn btn-primary" id="btn-subcat-next" disabled onclick="goTo('screen-animal')">Continuar</button>
+    </div>
+  </div>
+
+  <!-- ══════════ SCREEN 5: ELEGIR ANIMAL ══════════ -->
+  <div class="screen" id="screen-animal">
+    <div class="topbar">
+      <button class="back-btn" onclick="goTo('screen-subcategory')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></button>
+      <h2>Aves — Productos</h2>
+      <button class="home-btn" onclick="goTo('screen-dashboard')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12l9-9 9 9"/><path d="M9 21V9h6v12"/></svg></button>
+    </div>
+    <div class="content">
+      <p class="section-subtitle">Avicultura → Elige el tipo de ave</p>
+      <div class="list-item" onclick="selectAnimal('Pollo')" style="border: 2px solid transparent;" id="animal-pollo">
+        <div class="li-icon">🐔</div>
+        <div class="li-info"><h4>Pollo</h4><p>Gallus gallus domesticus</p></div>
+        <span class="li-arrow">›</span>
+      </div>
+      <div class="list-item" onclick="selectAnimal('Pato')">
+        <div class="li-icon">🦆</div>
+        <div class="li-info"><h4>Pato</h4><p>Anas platyrhynchos</p></div>
+        <span class="li-arrow">›</span>
+      </div>
+      <div class="list-item" onclick="selectAnimal('Pavo')">
+        <div class="li-icon">🦃</div>
+        <div class="li-info"><h4>Pavo</h4><p>Meleagris gallopavo</p></div>
+        <span class="li-arrow">›</span>
+      </div>
+      <div class="list-item" onclick="selectAnimal('Codorniz')">
+        <div class="li-icon">🐦</div>
+        <div class="li-info"><h4>Codorniz</h4><p>Coturnix coturnix</p></div>
+        <span class="li-arrow">›</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════ SCREEN 6: REGISTRO ANIMAL ══════════ -->
+  <div class="screen" id="screen-register-animal">
+    <div class="topbar">
+      <button class="back-btn" onclick="goTo('screen-animal')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></button>
+      <h2 id="register-title">Registrar Pollo</h2>
+      <button class="home-btn" onclick="goTo('screen-dashboard')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12l9-9 9 9"/><path d="M9 21V9h6v12"/></svg></button>
+    </div>
+    <div class="content">
+      <div class="card" style="background:var(--primary-light);border-color:transparent;margin-bottom:20px;">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span style="font-size:28px;" id="register-icon">🐔</span>
+          <div>
+            <h4 style="font-size:14px;font-weight:600;" id="register-card-title">Nuevo registro de Pollo</h4>
+            <p style="font-size:12px;color:var(--text-secondary);">Completa toda la información del activo</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Cantidad</label>
+        <input type="number" placeholder="Ej: 1" value="1" min="1" id="reg-quantity">
+      </div>
+      <div class="form-group">
+        <label>Propósito</label>
+        <select id="reg-purpose">
+          <option value="">Seleccionar…</option>
+          <option>Carne</option>
+          <option>Huevo</option>
+          <option>Doble propósito</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Especie / Raza</label>
+        <input type="text" placeholder="Ej: Ross 308, Plymouth Rock" id="reg-breed">
+      </div>
+      <div class="form-group">
+        <label>Identificador</label>
+        <input type="text" placeholder="Ej: POLLO-023" id="reg-identifier">
+      </div>
+      <div class="form-group">
+        <label>Edad (semanas)</label>
+        <input type="number" placeholder="Ej: 6" id="reg-age">
+      </div>
+      <div class="form-group">
+        <label>Peso (kg)</label>
+        <input type="number" step="0.1" placeholder="Ej: 2.5" id="reg-weight">
+      </div>
+      <div class="form-group">
+        <label>Condición</label>
+        <select id="reg-condition">
+          <option value="">Seleccionar…</option>
+          <option>Excelente</option>
+          <option>Buena</option>
+          <option>Regular</option>
+          <option>Requiere atención</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Procedencia</label>
+        <input type="text" placeholder="Ej: Granja Bachoco, Cuautla" id="reg-origin">
+      </div>
+      <div class="form-group">
+        <label>Contacto del responsable</label>
+        <input type="tel" placeholder="+52 777 000 0000" id="reg-phone">
+      </div>
+
+      <button class="btn btn-primary" onclick="registerAnimal()" style="margin-top:10px;">Registrar Activo</button>
+    </div>
+  </div>
+
+  <!-- ══════════ SCREEN 7: DASHBOARD PRODUCTOR ══════════ -->
+  <div class="screen" id="screen-dashboard">
+    <div class="topbar">
+      <div style="width:36px;height:36px;background:var(--primary);border-radius:10px;display:flex;align-items:center;justify-content:center;">
+        <span style="font-family:'Outfit';font-size:14px;font-weight:800;color:#fff;">Rei</span>
+      </div>
+      <h2>Panel del Productor</h2>
+    </div>
+    <div class="content">
+      <!-- User Info -->
+      <div class="card" style="display:flex;align-items:center;gap:14px;">
+        <div style="width:50px;height:50px;background:var(--primary-light);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;">👤</div>
+        <div style="flex:1;">
+          <h4 style="font-size:15px;font-weight:600;" id="dash-username">Juan Pérez</h4>
+          <p style="font-size:12px;color:var(--text-secondary);">Productor · Morelos, MX</p>
+        </div>
+        <span class="tag tag-green">Activo</span>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-value" id="dash-activos">4</div>
+          <div class="stat-label">Activos totales</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">1</div>
+          <div class="stat-label">Contratos</div>
+        </div>
+      </div>
+
+      <p class="section-title">Mis Categorías</p>
+
+      <div class="list-item" onclick="goToActivos()">
+        <div class="li-icon">🐔</div>
+        <div class="li-info">
+          <h4 id="dash-cat-title">Pollo</h4>
+          <p id="dash-cat-subtitle">Avicultura · 0 activos registrados</p>
+        </div>
+        <span class="li-arrow">›</span>
+      </div>
+      <div class="list-item" style="opacity:0.5;pointer-events:none;">
+        <div class="li-icon">🐮</div>
+        <div class="li-info">
+          <h4>Bovino</h4>
+          <p>Ganadería · Próximamente</p>
+        </div>
+        <span class="li-arrow">›</span>
+      </div>
+
+      <div class="divider"></div>
+
+      <button class="btn btn-outline" onclick="goTo('screen-category')" style="margin-top:4px;">
+        <span>＋</span> Registrar nuevo activo
+      </button>
+    </div>
+  </div>
+
+  <!-- ══════════ SCREEN 8: ACTIVOS DE POLLO ══════════ -->
+  <div class="screen" id="screen-activos">
+    <div class="topbar">
+      <button class="back-btn" onclick="goTo('screen-dashboard')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></button>
+      <h2>Pollo — Activos</h2>
+      <button class="home-btn" onclick="goTo('screen-dashboard')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12l9-9 9 9"/><path d="M9 21V9h6v12"/></svg></button>
+    </div>
+    <div class="content">
+      <p class="section-subtitle" id="activos-subtitle">Sin activos registrados</p>
+      <div id="activos-list"></div>
+    </div>
+  </div>
+
+  <!-- ══════════ SCREEN 9: DETALLE ACTIVO ══════════ -->
+  <div class="screen" id="screen-activo-detail">
+    <div class="topbar">
+      <button class="back-btn" onclick="goTo('screen-activos')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></button>
+      <h2 id="detail-top-title">Activo</h2>
+      <button class="home-btn" onclick="goTo('screen-dashboard')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12l9-9 9 9"/><path d="M9 21V9h6v12"/></svg></button>
+    </div>
+    <div class="content">
+      <div class="card" style="text-align:center;">
+        <div style="font-size:42px;margin-bottom:6px;" id="detail-icon">🐔</div>
+        <h3 style="font-family:'Outfit';font-size:18px;font-weight:700;" id="detail-identifier">Activo</h3>
+        <p style="font-size:12px;color:var(--text-secondary);" id="detail-subline">Información del activo</p>
+        <div style="display:flex;justify-content:center;gap:8px;margin-top:10px;">
+          <span class="tag tag-blue" id="detail-tag-cat">Categoría</span>
+          <span class="tag tag-green">Activo</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="info-row"><span class="ir-label">Identificador</span><span class="ir-value" id="detail-info-identifier">-</span></div>
+        <div class="info-row"><span class="ir-label">Edad</span><span class="ir-value" id="detail-info-age">-</span></div>
+        <div class="info-row"><span class="ir-label">Peso</span><span class="ir-value" id="detail-info-weight">-</span></div>
+        <div class="info-row"><span class="ir-label">Condición</span><span class="ir-value" id="detail-info-condition">-</span></div>
+        <div class="info-row"><span class="ir-label">Procedencia</span><span class="ir-value" id="detail-info-origin">-</span></div>
+      </div>
+
+      <!-- Score Progress -->
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+          <p class="section-title" style="margin:0;">Score del Activo</p>
+          <span style="font-family:'Outfit';font-size:20px;font-weight:700;color:var(--accent);" id="score-display">0</span>
+        </div>
+        <div class="progress-container">
+          <div class="progress-bar" id="score-bar" style="width:0%;"></div>
+        </div>
+        <p style="font-size:11px;color:var(--text-secondary);margin-top:4px;" id="score-text">0 / 100 puntos</p>
+      </div>
+
+      <!-- Diagnósticos -->
+      <p class="section-title">Diagnósticos por Niveles</p>
+
+      <div id="diag-list"></div>
+
+      <div class="divider"></div>
+
+      <button class="btn btn-accent" id="btn-finanzas" onclick="openFinanzas()">
+        💰 Habilitar Finanzas del Activo
+      </button>
+    </div>
+  </div>
+
+  <!-- ══════════ SCREEN 10-11: FINANZAS DEL ACTIVO ══════════ -->
+  <div class="screen" id="screen-finanzas">
+    <div class="topbar">
+      <button class="back-btn" onclick="goTo('screen-activo-detail')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></button>
+      <h2 id="fin-title">Finanzas</h2>
+      <button class="home-btn" onclick="goTo('screen-dashboard')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12l9-9 9 9"/><path d="M9 21V9h6v12"/></svg></button>
+    </div>
+    <div class="content">
+      <!-- Info Activo -->
+      <div class="card" style="display:flex;align-items:center;gap:14px;">
+        <div style="width:48px;height:48px;background:var(--accent-light);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;" id="fin-icon">🐔</div>
+        <div style="flex:1;">
+          <h4 style="font-size:14px;font-weight:600;" id="fin-identifier">-</h4>
+          <p style="font-size:12px;color:var(--text-secondary);" id="fin-subline">-</p>
+        </div>
+        <span class="tag tag-green">Activo</span>
+      </div>
+
+      <!-- Rendimiento -->
+      <div class="card">
+        <p class="section-title" style="margin-bottom:12px;">Rendimiento Estimado</p>
+        <div style="display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:14px;">
+          <span style="font-family:'Outfit';font-size:36px;font-weight:700;color:var(--accent);" id="fin-apr">0.0%</span>
+          <span class="apr-badge positive">APR ↑</span>
+        </div>
+        <p style="font-size:11px;color:var(--text-secondary);text-align:center;line-height:1.6;">Calculado a partir de: datos del productor, diagnósticos, tipo de animal, perspectivas de mercado, costos de producción y factores estacionales.</p>
+      </div>
+
+      <!-- Vencimiento -->
+      <div class="card">
+        <p class="section-title" style="margin-bottom:10px;">Contrato — Estilo Futuros</p>
+        <div style="text-align:center;">
+          <span style="font-family:'Outfit';font-size:28px;font-weight:700;color:var(--warning);" id="fin-expiration">0 días</span>
+          <p style="font-size:12px;color:var(--text-secondary);margin-top:4px;">Vencimiento estimado del activo</p>
+        </div>
+        <div class="divider"></div>
+        <div class="info-row"><span class="ir-label">Valor del contrato</span><span class="ir-value" id="fin-contract-value">$0 MXN</span></div>
+        <div class="info-row"><span class="ir-label">Costo de producción</span><span class="ir-value" id="fin-cost">$0 MXN</span></div>
+        <div class="info-row"><span class="ir-label">Precio de mercado est.</span><span class="ir-value" id="fin-market-price">$0/kg</span></div>
+        <div class="info-row"><span class="ir-label">Rendimiento neto</span><span class="ir-value" style="color:var(--accent);" id="fin-net">+$0 MXN</span></div>
+      </div>
+
+      <!-- Opciones Financieras -->
+      <p class="section-title">Opciones Financieras</p>
+      <div class="action-grid">
+        <div class="action-card disabled">
+          <div class="ac-icon blue">🏦</div>
+          <h4>Préstamos</h4>
+          <p>No disponible</p>
+        </div>
+        <div class="action-card disabled">
+          <div class="ac-icon orange">📊</div>
+          <h4>Financiamiento</h4>
+          <p>No disponible</p>
+        </div>
+        <div class="action-card" onclick="goToWallet()" style="grid-column: 1 / -1;">
+          <div class="ac-icon green">💰</div>
+          <h4>Inversiones</h4>
+          <p>Disponible — Depositar contrato en pool de inversión</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════ SCREEN 12: WALLET ══════════ -->
+  <div class="screen" id="screen-wallet">
+    <div class="topbar">
+      <button class="back-btn" onclick="goTo('screen-finanzas')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></button>
+      <h2>Cartera</h2>
+      <button class="home-btn" onclick="goTo('screen-dashboard')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12l9-9 9 9"/><path d="M9 21V9h6v12"/></svg></button>
+    </div>
+    <div class="content">
+      <!-- Balance -->
+      <div class="balance-display">
+        <div class="bal-label">Saldo disponible</div>
+        <div class="bal-amount" id="wallet-balance">$0</div>
+        <div class="bal-sub">MXN · Actualizado hoy</div>
+      </div>
+
+      <!-- Tabs -->
+      <div class="tab-bar">
+        <button class="tab active" onclick="switchWalletTab(this, 'tab-movimientos')">Movimientos</button>
+        <button class="tab" onclick="switchWalletTab(this, 'tab-pool')">Pool Inversión</button>
+      </div>
+
+      <!-- Tab: Movimientos -->
+      <div id="tab-movimientos">
+        <p class="section-title">Operaciones Bancarias</p>
+        <div class="action-grid" style="margin-bottom:20px;">
+          <div class="action-card" onclick="withdrawMxn()">
+            <div class="ac-icon blue">🏧</div>
+            <h4>Retiro a Banco</h4>
+            <p>Transferencia SPEI con MXNe</p>
+          </div>
+          <div class="action-card" onclick="depositMxn()">
+            <div class="ac-icon green">💳</div>
+            <h4>Depósito</h4>
+            <p>MXN a MXNe sobre Stellar</p>
+          </div>
+          <div class="action-card" onclick="showToast('Rampa física disponible próximamente')" style="grid-column: 1 / -1;">
+            <div class="ac-icon orange">🏪</div>
+            <h4>Retiro en Autoservicio</h4>
+            <p>OXXO, 7-Eleven y más</p>
+          </div>
+        </div>
+
+        <p class="section-title">Historial reciente</p>
+        <div class="card" style="padding:14px;" id="wallet-history"></div>
+      </div>
+
+      <!-- Tab: Pool Inversión -->
+      <div id="tab-pool" style="display:none;">
+        <div class="card" style="background:var(--accent-light);border-color:transparent;">
+          <div style="text-align:center;">
+            <p style="font-size:12px;color:var(--accent);font-weight:600;margin-bottom:4px;">Contrato en Pool</p>
+            <span style="font-family:'Outfit';font-size:26px;font-weight:700;color:var(--accent);" id="pool-contract-id">Sin contrato</span>
+            <p style="font-size:12px;color:var(--text-secondary);margin-top:6px;" id="pool-contract-value">Valor del contrato: $0 MXN</p>
+            <p style="font-size:12px;color:var(--text-secondary);" id="pool-contract-yield">Rendimiento acumulado: +$0 MXN</p>
+          </div>
+        </div>
+
+        <p class="section-title">Acciones del Contrato</p>
+
+        <button class="btn btn-accent" onclick="depositContractToPool()" style="margin-bottom:10px;">
+          📥 Depositar Contrato en Pool
+        </button>
+
+        <div class="card" style="background: var(--warning-light);border-color:transparent;">
+          <p style="font-size:12px;font-weight:600;color:var(--warning);margin-bottom:6px;">⚠️ Retirar Contrato</p>
+          <p style="font-size:11px;color:var(--text-secondary);line-height:1.5;margin-bottom:12px;">Para retirar el contrato del pool, deberás regresar el capital obtenido más las obligaciones correspondientes.</p>
+          <button class="btn btn-outline btn-sm" onclick="withdrawContractFromPool()">
+            Retirar Contrato
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+const API_BASE = "/api/app";
+const ICONS = {
+  Pollo: "🐔",
+  Pato: "🦆",
+  Pavo: "🦃",
+  Codorniz: "🐦",
+  Ganadería: "🐮",
+  Avicultura: "🐔",
+  Acuicultura: "🐟",
+  Apicultura: "🐝",
+};
+
+const state = {
+  userId: localStorage.getItem("reiUserId") || null,
+  selectedCategory: null,
+  selectedSubcategory: null,
+  selectedAnimalType: "Pollo",
+  currentAnimal: null,
+  finance: null,
+  wallet: null,
+};
+
+function goTo(screenId) {
+  document.querySelectorAll(".screen").forEach((s) => s.classList.remove("active"));
+  document.getElementById(screenId).classList.add("active");
+  window.scrollTo(0, 0);
+}
+
+async function api(path, options = {}) {
+  const response = await fetch(`${API_BASE}${path}`, {
+    ...options,
+    headers: {
+      "Content-Type": "application/json",
+      ...(state.userId ? { "x-user-id": state.userId } : {}),
+      ...(options.headers || {}),
+    },
+  });
+
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    throw new Error(data.error || "Error en la operación");
+  }
+  return data;
+}
+
+function ensureLoggedIn() {
+  if (!state.userId) {
+    showToast("Inicia sesión primero");
+    goTo("screen-auth");
+    return false;
+  }
+  return true;
+}
+
+function fmtMxn(value) {
+  return new Intl.NumberFormat("es-MX", { style: "currency", currency: "MXN", maximumFractionDigits: 0 }).format(value || 0);
+}
+
+async function doLogin() {
+  try {
+    const email = document.getElementById("input-email").value.trim();
+    const password = document.getElementById("input-pass").value.trim();
+    const result = await api("/auth/login", {
+      method: "POST",
+      body: JSON.stringify({ email, password }),
+    });
+    state.userId = result.userId;
+    localStorage.setItem("reiUserId", state.userId);
+    await refreshDashboard();
+    showToast(`Bienvenido ${result.name}`);
+    goTo("screen-category");
+  } catch (error) {
+    showToast(error.message);
+  }
+}
+
+async function selectCategory(el, cat) {
+  document.querySelectorAll("#screen-category .option-card").forEach((c) => c.classList.remove("selected"));
+  el.classList.add("selected");
+  state.selectedCategory = cat;
+  document.getElementById("btn-cat-next").disabled = false;
+  if (ensureLoggedIn()) {
+    try {
+      await api("/category", { method: "POST", body: JSON.stringify({ category: cat }) });
+    } catch (error) {
+      showToast(error.message);
+    }
+  }
+}
+
+async function selectSubcat(el, sub) {
+  document.querySelectorAll("#screen-subcategory .option-card").forEach((c) => c.classList.remove("selected"));
+  el.classList.add("selected");
+  state.selectedSubcategory = sub;
+  document.getElementById("btn-subcat-next").disabled = false;
+  if (ensureLoggedIn()) {
+    try {
+      await api("/subcategory", { method: "POST", body: JSON.stringify({ subcategory: sub }) });
+    } catch (error) {
+      showToast(error.message);
+    }
+  }
+}
+
+function selectAnimal(animal) {
+  state.selectedAnimalType = animal;
+  const icon = ICONS[animal] || "🐾";
+  document.getElementById("register-title").textContent = `Registrar ${animal}`;
+  document.getElementById("register-icon").textContent = icon;
+  document.getElementById("register-card-title").textContent = `Nuevo registro de ${animal}`;
+  goTo("screen-register-animal");
+}
+
+async function registerAnimal() {
+  if (!ensureLoggedIn()) return;
+  try {
+    const payload = {
+      type: state.selectedAnimalType,
+      quantity: Number(document.getElementById("reg-quantity").value || 1),
+      purpose: document.getElementById("reg-purpose").value,
+      breed: document.getElementById("reg-breed").value.trim(),
+      identifier: document.getElementById("reg-identifier").value.trim(),
+      ageWeeks: Number(document.getElementById("reg-age").value || 0),
+      weightKg: Number(document.getElementById("reg-weight").value || 0),
+      condition: document.getElementById("reg-condition").value,
+      origin: document.getElementById("reg-origin").value.trim(),
+      responsiblePhone: document.getElementById("reg-phone").value.trim(),
+    };
+    const result = await api("/animals", { method: "POST", body: JSON.stringify(payload) });
+    state.currentAnimal = result.animal;
+    showToast("Activo registrado exitosamente");
+    await refreshDashboard();
+    await renderActivos();
+    goTo("screen-dashboard");
+  } catch (error) {
+    showToast(error.message);
+  }
+}
+
+async function refreshDashboard() {
+  if (!ensureLoggedIn()) return;
+  const data = await api("/dashboard");
+  document.getElementById("dash-username").textContent = data.user.name;
+  document.getElementById("dash-activos").textContent = data.totals.activos;
+  document.getElementById("dash-cat-title").textContent = data.user.subcategory || data.user.category || "Sin categoría";
+  document.getElementById("dash-cat-subtitle").textContent = `${data.user.category || "General"} · ${data.totals.activos} activos registrados`;
+}
+
+async function goToActivos() {
+  if (!ensureLoggedIn()) return;
+  await renderActivos();
+  goTo("screen-activos");
+}
+
+async function renderActivos() {
+  const data = await api("/animals");
+  const container = document.getElementById("activos-list");
+  const subtitle = document.getElementById("activos-subtitle");
+  subtitle.textContent = `${state.selectedSubcategory || "Activos"} · ${data.animals.length} registros`;
+
+  if (!data.animals.length) {
+    container.innerHTML = `<div class="card"><p style="font-size:13px;color:var(--text-secondary);">Aún no hay activos. Registra uno desde el panel.</p></div>`;
+    return;
+  }
+
+  container.innerHTML = data.animals
+    .map((animal) => {
+      const tagClass = animal.score >= 100 ? "tag-green" : animal.score >= 60 ? "tag-orange" : "tag-blue";
+      const icon = ICONS[animal.type] || "🐾";
+      return `
+        <div class="list-item" onclick="openAnimalDetail('${animal.id}')">
+          <div class="li-icon" style="background:var(--accent-light);">${icon}</div>
+          <div class="li-info">
+            <h4>${animal.identifier}</h4>
+            <p>${animal.breed || animal.type} · ${animal.weightKg || 0} kg · Score: ${animal.score}</p>
+          </div>
+          <span class="tag ${tagClass}" style="font-size:10px;">${animal.score}%</span>
+        </div>
+      `;
+    })
+    .join("");
+}
+
+async function openAnimalDetail(animalId) {
+  try {
+    const data = await api(`/animals/${animalId}`);
+    state.currentAnimal = data.animal;
+    const animal = data.animal;
+    const icon = ICONS[animal.type] || "🐾";
+
+    document.getElementById("detail-top-title").textContent = animal.identifier;
+    document.getElementById("detail-icon").textContent = icon;
+    document.getElementById("detail-identifier").textContent = animal.identifier;
+    document.getElementById("detail-subline").textContent = `${animal.breed || animal.type} · ${animal.purpose} · ${animal.origin || "Sin origen"}`;
+    document.getElementById("detail-tag-cat").textContent = state.selectedSubcategory || state.selectedCategory || animal.type;
+
+    document.getElementById("detail-info-identifier").textContent = animal.identifier;
+    document.getElementById("detail-info-age").textContent = `${animal.ageWeeks || 0} semanas`;
+    document.getElementById("detail-info-weight").textContent = `${animal.weightKg || 0} kg`;
+    document.getElementById("detail-info-condition").textContent = animal.condition || "N/A";
+    document.getElementById("detail-info-origin").textContent = animal.origin || "N/A";
+
+    renderDiagnostics(data.diagnostics, animal.score);
+    goTo("screen-activo-detail");
+  } catch (error) {
+    showToast(error.message);
+  }
+}
+
+function renderDiagnostics(diagnostics, score) {
+  const list = document.getElementById("diag-list");
+  list.innerHTML = diagnostics
+    .map(
+      (diag) => `
+      <div class="diag-item ${diag.completed ? "completed" : ""}" onclick="completeDiag(${diag.level})">
+        <div class="diag-check">${diag.completed ? "✓" : ""}</div>
+        <div class="diag-info">
+          <h4>Nivel ${diag.level} — ${diag.title}</h4>
+          <p>${diag.description}</p>
+        </div>
+        <span class="diag-score">+${diag.score}</span>
+      </div>
+    `
+    )
+    .join("");
+
+  document.getElementById("score-display").textContent = score;
+  document.getElementById("score-bar").style.width = `${score}%`;
+  document.getElementById("score-text").textContent = `${score} / 100 puntos ${score >= 100 ? "— ¡Completo!" : ""}`;
+  document.getElementById("btn-finanzas").disabled = score < 100;
+}
+
+async function completeDiag(level) {
+  if (!state.currentAnimal) return;
+  try {
+    const result = await api(`/animals/${state.currentAnimal.id}/diagnostics/${level}`, { method: "POST" });
+    state.currentAnimal.score = result.score;
+    const updated = await api(`/animals/${state.currentAnimal.id}`);
+    renderDiagnostics(updated.diagnostics, updated.animal.score);
+    await refreshDashboard();
+    await renderActivos();
+  } catch (error) {
+    showToast(error.message);
+  }
+}
+
+async function openFinanzas() {
+  if (!state.currentAnimal) {
+    showToast("Selecciona un activo primero");
+    return;
+  }
+
+  try {
+    const finance = await api(`/animals/${state.currentAnimal.id}/finance`);
+    state.finance = finance;
+    document.getElementById("fin-title").textContent = `Finanzas — ${state.currentAnimal.identifier}`;
+    document.getElementById("fin-icon").textContent = ICONS[state.currentAnimal.type] || "🐾";
+    document.getElementById("fin-identifier").textContent = state.currentAnimal.identifier;
+    document.getElementById("fin-subline").textContent = `${state.currentAnimal.breed || state.currentAnimal.type} · ${state.currentAnimal.purpose} · Score: ${state.currentAnimal.score}`;
+    document.getElementById("fin-apr").textContent = `${finance.apr}%`;
+    document.getElementById("fin-expiration").textContent = `${finance.expirationDays} días`;
+    document.getElementById("fin-contract-value").textContent = `${fmtMxn(finance.contractValueMxn)} MXN`;
+    document.getElementById("fin-cost").textContent = `${fmtMxn(finance.productionCostMxn)} MXN`;
+    document.getElementById("fin-market-price").textContent = `$${finance.marketPricePerKg}/kg`;
+    document.getElementById("fin-net").textContent = `+${fmtMxn(finance.expectedNetMxn)} MXN`;
+    goTo("screen-finanzas");
+  } catch (error) {
+    showToast(error.message);
+  }
+}
+
+async function goToWallet() {
+  if (!ensureLoggedIn()) return;
+  await refreshWallet();
+  goTo("screen-wallet");
+}
+
+async function refreshWallet() {
+  const wallet = await api("/wallet");
+  state.wallet = wallet;
+  document.getElementById("wallet-balance").textContent = fmtMxn(wallet.mxnBalance);
+  renderWalletHistory(wallet.movements);
+  renderPoolInfo(wallet.poolContracts || []);
+}
+
+function renderWalletHistory(movements) {
+  const container = document.getElementById("wallet-history");
+  if (!movements.length) {
+    container.innerHTML = `<p style="font-size:12px;color:var(--text-secondary);">Sin movimientos todavía.</p>`;
+    return;
+  }
+
+  container.innerHTML = movements.slice(0, 5).map((movement) => {
+    const sign = movement.type.includes("withdraw") ? "-" : "+";
+    const color = sign === "+" ? "var(--accent)" : "var(--warning)";
+    const amount = movement.amount ? `${sign}${movement.amount} ${movement.currency}` : movement.note;
+    return `<div class="info-row"><span class="ir-label">${movement.note}</span><span class="ir-value" style="color:${color};">${amount}</span></div>`;
+  }).join("");
+}
+
+function renderPoolInfo(poolContracts) {
+  if (!poolContracts.length) {
+    document.getElementById("pool-contract-id").textContent = "Sin contrato";
+    document.getElementById("pool-contract-value").textContent = "Valor del contrato: $0 MXN";
+    document.getElementById("pool-contract-yield").textContent = "Rendimiento acumulado: +$0 MXN";
+    return;
+  }
+
+  const first = poolContracts[0];
+  document.getElementById("pool-contract-id").textContent = first;
+  document.getElementById("pool-contract-value").textContent = "Valor del contrato: tokenizado en MXNe";
+  document.getElementById("pool-contract-yield").textContent = "Rendimiento acumulado: dinámico";
+}
+
+async function depositMxn() {
+  const amount = Number(prompt("Monto en MXN a depositar (se tokeniza como MXNe en Stellar):", "500"));
+  if (!amount || amount <= 0) return;
+  try {
+    const result = await api("/wallet/deposit-mxne", { method: "POST", body: JSON.stringify({ amount }) });
+    await refreshWallet();
+    showToast(`Depósito confirmado en Stellar. Tx: ${result.txHash.slice(0, 8)}...`);
+  } catch (error) {
+    showToast(error.message);
+  }
+}
+
+async function withdrawMxn() {
+  const amount = Number(prompt("Monto MXNe a retirar a MXN:", "200"));
+  if (!amount || amount <= 0) return;
+  try {
+    const result = await api("/wallet/withdraw-mxne", { method: "POST", body: JSON.stringify({ amount }) });
+    await refreshWallet();
+    showToast(`Retiro iniciado. Tx: ${result.txHash.slice(0, 8)}...`);
+  } catch (error) {
+    showToast(error.message);
+  }
+}
+
+async function depositContractToPool() {
+  if (!state.currentAnimal) return showToast("Selecciona un activo");
+  try {
+    await api("/wallet/pool/deposit-contract", {
+      method: "POST",
+      body: JSON.stringify({ animalId: state.currentAnimal.id }),
+    });
+    await refreshWallet();
+    showToast("Contrato depositado en pool de inversión");
+  } catch (error) {
+    showToast(error.message);
+  }
+}
+
+async function withdrawContractFromPool() {
+  if (!state.currentAnimal) return showToast("Selecciona un activo");
+  try {
+    await api("/wallet/pool/withdraw-contract", {
+      method: "POST",
+      body: JSON.stringify({ animalId: state.currentAnimal.id }),
+    });
+    await refreshWallet();
+    showToast("Solicitud de retiro enviada con obligación de liquidación");
+  } catch (error) {
+    showToast(error.message);
+  }
+}
+
+function switchWalletTab(btn, tabId) {
+  document.querySelectorAll("#screen-wallet .tab").forEach((t) => t.classList.remove("active"));
+  btn.classList.add("active");
+  document.getElementById("tab-movimientos").style.display = tabId === "tab-movimientos" ? "block" : "none";
+  document.getElementById("tab-pool").style.display = tabId === "tab-pool" ? "block" : "none";
+}
+
+function showToast(msg) {
+  const toast = document.getElementById("toast");
+  toast.textContent = msg;
+  toast.classList.add("show");
+  setTimeout(() => toast.classList.remove("show"), 2800);
+}
+
+async function bootstrapApp() {
+  if (!state.userId) return;
+  try {
+    await refreshDashboard();
+    await renderActivos();
+  } catch (_error) {
+    localStorage.removeItem("reiUserId");
+    state.userId = null;
+  }
+}
+
+bootstrapApp();
+</script>
+</body>
+</html>
